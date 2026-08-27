@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma线框图导出</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #E5E5E5; padding: 40px; font-family: -apple-system, "PingFang SC", sans-serif; }
+        
+        .frame-label { font-size: 14px; color: #666; margin-bottom: 8px; font-weight: 500; }
+        
+        .iphone-frame {
+            width: 390px;
+            height: 844px;
+            background: white;
+            border-radius: 40px;
+            border: 3px solid #333;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        /* 状态栏 */
+        .status-bar {
+            height: 54px;
+            background: #8B4513;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 28px 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .status-bar .time { font-size: 15px; font-weight: 600; }
+        .status-icons { display: flex; gap: 6px; font-size: 12px; }
+        
+        /* 导航栏 */
+        .nav-bar {
+            background: #8B4513;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .nav-bar h3 { color: white; font-size: 17px; }
+        .nav-bar .progress { color: rgba(255,255,255,0.8); font-size: 13px; }
+        
+        /* 对话区域 */
+        .story-content {
+            padding: 20px;
+            height: 480px;
+            overflow-y: auto;
+        }
+        
+        .narrator {
+            background: #FAF0E6;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #5C4033;
+            line-height: 1.7;
+            font-style: italic;
+        }
+        
+        .dialogue {
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .dialogue.emperor { background: #FFF8E7; border-left: 3px solid #DAA520; }
+        .dialogue.npc { background: #F5F0FF; border-left: 3px solid #9B59B6; }
+        .dialogue.player { background: #F0F8FF; border-left: 3px solid #4A90D9; }
+        .dialogue .name { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+        .dialogue.emperor .name { color: #DAA520; }
+        .dialogue.npc .name { color: #9B59B6; }
+        .dialogue.player .name { color: #4A90D9; }
+        .dialogue .text { font-size: 14px; color: #2C1810; line-height: 1.6; }
+        .dialogue .ai-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 10px;
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        /* 选项区域 */
+        .choices {
+            padding: 16px 20px;
+            background: #FAF0E6;
+            border-top: 1px solid #DEB887;
+        }
+        .choices h4 { font-size: 12px; color: #8B7355; margin-bottom: 10px; }
+        .choice-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: white;
+            border: 1px solid #DEB887;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 14px;
+            color: #2C1810;
+        }
+        .choice-btn.locked {
+            background: #f5f5f5;
+            border-style: dashed;
+            color: #999;
+        }
+        .choice-btn .lock { font-size: 11px; color: #e74c3c; margin-top: 4px; }
+        
+        /* 流程图样式 */
+        .flow-frame {
+            width: 1200px;
+            height: 700px;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #333;
+            padding: 40px;
+            position: relative;
+        }
+        .flow-title { font-size: 20px; font-weight: 700; color: #8B4513; margin-bottom: 24px; }
+        
+        .flow-node {
+            position: absolute;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            min-width: 120px;
+        }
+        .flow-node.chapter { background: #8B4513; color: white; }
+        .flow-node.choice { background: #FFF8E7; border: 2px solid #DAA520; color: #2C1810; }
+        .flow-node.ending { background: #2E7D32; color: white; border-radius: 20px; }
+        .flow-node .label { font-size: 11px; opacity: 0.8; margin-top: 4px; }
+        
+        .flow-line {
+            position: absolute;
+            background: #DEB887;
+        }
+        .flow-line.h { height: 2px; }
+        .flow-line.v { width: 2px; }
+        
+        /* 状态流转图 */
+        .state-frame {
+            width: 1000px;
+            height: 500px;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #333;
+            padding: 40px;
+            position: relative;
+        }
+        .state-title { font-size: 20px; font-weight: 700; color: #8B4513; margin-bottom: 24px; }
+        
+        .state-node {
+            position: absolute;
+            padding: 14px 24px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .state-node.input { background: #E3F2FD; border: 2px solid #4A90D9; color: #1565C0; }
+        .state-node.process { background: #FFF3E0; border: 2px solid #FF9800; color: #E65100; }
+        .state-node.decision { background: #F3E5F5; border: 2px solid #9C27B0; color: #6A1B9A; border-radius: 4px; }
+        .state-node.output { background: #E8F5E9; border: 2px solid #4CAF50; color: #2E7D32; }
+        .state-node.output.locked { background: #FFEBEE; border-color: #F44336; color: #C62828; }
+        
+        /* 布局容器 */
+        .frame-wrapper {
+            display: inline-block;
+            margin-right: 40px;
+            margin-bottom: 40px;
+            vertical-align: top;
+        }
+        .frame-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .frame-col {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 画板1：对话主界面 -->
+<div class="frame-wrapper">
+    <div class="frame-label">画板1：对话主界面 (390×844)</div>
+    <div class="iphone-frame" id="frame1">
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+                <span>📶</span>
+                <span>🔋</span>
+            </div>
+        </div>
+        <div class="nav-bar">
+            <h3>序章：入宫</h3>
+            <span class="progress">第1章 / 共6章</span>
+        </div>
+        <div class="story-content">
+            <div class="narrator">
+                大婚之夜，凤烛摇曳。你身着凤冠霞帔，端坐于永和宫中。窗外传来更鼓声，已是三更。
+            </div>
+            <div class="narrator">
+                你是当朝新封的淑妃，父亲是礼部侍郎。此番入宫，既是家族荣耀，也是步步惊心的开始。
+            </div>
+            <div class="dialogue emperor">
+                <div class="name">皇帝 · 萧承煜</div>
+                <div class="text">淑妃，朕听闻你精通诗书。今日大婚，可有佳作献上？</div>
+                <span class="ai-badge">AI生成</span>
+            </div>
+        </div>
+        <div class="choices">
+            <h4>请选择你的回应：</h4>
+            <div class="choice-btn">恭敬吟诗，展现才华</div>
+            <div class="choice-btn">谦辞推脱，以退为进</div>
+            <div class="choice-btn">反问皇帝，试探心意</div>
+            <div class="choice-btn locked">
+                以诗喻志，暗表心迹
+                <div class="lock">🔒 需要 心机 ≥ 40</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 画板2：属性面板 -->
+<div class="frame-wrapper">
+    <div class="frame-label">画板2：属性面板 (390×844)</div>
+    <div class="iphone-frame" id="frame2">
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons"><span>📶</span><span>🔋</span></div>
+        </div>
+        <div class="nav-bar">
+            <h3>第二章：御花园之约</h3>
+            <span class="progress">第2章 / 共6章</span>
+        </div>
+        <div class="story-content">
+            <div class="narrator">
+                三日后，你收到皇后请帖，邀各宫嫔妃御花园赏花。你知此去必定暗流涌动。
+            </div>
+            <div class="dialogue npc">
+                <div class="name">华妃 · 柳如烟</div>
+                <div class="text">哟，这不是淑妃妹妹吗？大婚之夜独得圣恩，今日怎有空来赏花？</div>
+                <span class="ai-badge">AI生成</span>
+            </div>
+        </div>
+        <div class="choices">
+            <h4>请选择你的回应：</h4>
+            <div class="choice-btn">华妃姐姐说笑了，妹妹刚到</div>
+            <div class="choice-btn">姐姐风姿绰约，妹妹自愧不如</div>
+            <div class="choice-btn">皇后娘娘宣召，妹妹不敢怠慢</div>
+        </div>
+    </div>
+</div>
+
+<!-- 画板3：分支流程图 -->
+<div class="frame-wrapper">
+    <div class="frame-label">画板3：分支流程图 (1200×700)</div>
+    <div class="flow-frame">
+        <div class="flow-title">《凤谋》完整剧情分支结构</div>
+        
+        <!-- 第1章 -->
+        <div class="flow-node chapter" style="left:500px; top:20px;">
+            序章：入宫<br><span class="label">3+1个选项</span>
+        </div>
+        
+        <div class="flow-line v" style="left:560px; top:70px; height:30px;"></div>
+        
+        <!-- 第1章分支 -->
+        <div class="flow-node choice" style="left:200px; top:110px;">
+            诗才初显<br><span class="label">好感+10 声望+5</span>
+        </div>
+        <div class="flow-node choice" style="left:440px; top:110px;">
+            以退为进<br><span class="label">智慧+10 声望+5</span>
+        </div>
+        <div class="flow-node choice" style="left:680px; top:110px;">
+            试探龙颜<br><span class="label">心机+15 声望+10</span>
+        </div>
+        <div class="flow-node choice" style="left:920px; top:110px; border-color:#999; color:#999;">
+            暗藏锋芒<br><span class="label">🔒 心机≥40</span>
+        </div>
+        
+        <div class="flow-line v" style="left:320px; top:160px; height:30px;"></div>
+        <div class="flow-line v" style="left:560px; top:160px; height:30px;"></div>
+        <div class="flow-line v" style="left:800px; top:160px; height:30px;"></div>
+        
+        <div class="flow-line h" style="left:320px; top:175px; width:480px;"></div>
+        <div class="flow-line v" style="left:560px; top:175px; height:30px;"></div>
+        
+        <!-- 第2章 -->
+        <div class="flow-node chapter" style="left:500px; top:210px;">
+            第二章：御花园<br><span class="label">4个选项</span>
+        </div>
+        
+        <div class="flow-line v" style="left:560px; top:260px; height:30px;"></div>
+        
+        <div class="flow-node choice" style="left:280px; top:300px;">
+            华妃试探<br><span class="label">好感+5 声望+5</span>
+        </div>
+        <div class="flow-node choice" style="left:520px; top:300px;">
+            茶中玄机<br><span class="label">智慧+10 声望+10</span>
+        </div>
+        <div class="flow-node choice" style="left:760px; top:300px;">
+            皇后出题<br><span class="label">好感+15 声望+15</span>
+        </div>
+        
+        <div class="flow-line v" style="left:400px; top:350px; height:30px;"></div>
+        <div class="flow-line v" style="left:640px; top:350px; height:30px;"></div>
+        <div class="flow-line h" style="left:400px; top:365px; width:240px;"></div>
+        <div class="flow-line v" style="left:520px; top:365px; height:30px;"></div>
+        
+        <!-- 第3章 -->
+        <div class="flow-node chapter" style="left:500px; top:400px;">
+            第三章：太后召见<br><span class="label">4个选项</span>
+        </div>
+        
+        <div class="flow-line v" style="left:560px; top:450px; height:30px;"></div>
+        
+        <div class="flow-node choice" style="left:350px; top:490px;">
+            忠心/智慧/本分<br><span class="label">声望+10~15</span>
+        </div>
+        <div class="flow-node choice" style="left:650px; top:490px; border-color:#999; color:#999;">
+            让陛下安心<br><span class="label">🔒 智慧≥65</span>
+        </div>
+        
+        <div class="flow-line v" style="left:500px; top:540px; height:30px;"></div>
+        
+        <!-- 第4-5章 -->
+        <div class="flow-node chapter" style="left:440px; top:580px; width:240px;">
+            第四章：永和宫的秘密<br>第五章：御前对质<br><span class="label">属性决定选项</span>
+        </div>
+        
+        <div class="flow-line v" style="left:560px; top:640px; height:30px;"></div>
+        
+        <!-- 第6章结局 -->
+        <div class="flow-node chapter" style="left:500px; top:670px;">
+            第六章：凤鸣九霄
+        </div>
+    </div>
+</div>
+
+<!-- 画板4：状态流转图 -->
+<div class="frame-wrapper">
+    <div class="frame-label">画板4：状态流转图 (1000×500)</div>
+    <div class="state-frame">
+        <div class="state-title">选择 → 属性变化 → 解锁判断 状态流转</div>
+        
+        <div class="state-node input" style="left:40px; top:80px;">
+            玩家选择<br>"反问皇帝"
+        </div>
+        
+        <div style="position:absolute; left:180px; top:105px; color:#999; font-size:20px;">→</div>
+        
+        <div class="state-node process" style="left:220px; top:80px;">
+            属性计算<br>
+            <span style="font-size:11px;">心机 +15<br>好感 -5<br>声望 +10</span>
+        </div>
+        
+        <div style="position:absolute; left:380px; top:105px; color:#999; font-size:20px;">→</div>
+        
+        <div class="state-node decision" style="left:420px; top:80px;">
+            心机 ≥ 40 ?
+        </div>
+        
+        <div style="position:absolute; left:560px; top:70px; color:#4CAF50; font-size:12px; font-weight:600;">YES</div>
+        <div style="position:absolute; left:560px; top:140px; color:#F44336; font-size:12px; font-weight:600;">NO</div>
+        
+        <div style="position:absolute; left:590px; top:80px; color:#999; font-size:20px;">→</div>
+        <div style="position:absolute; left:590px; top:150px; color:#999; font-size:20px;">→</div>
+        
+        <div class="state-node output" style="left:640px; top:65px;">
+            ✅ 解锁隐藏选项<br>"以诗喻志，暗表心迹"
+        </div>
+        
+        <div class="state-node output locked" style="left:640px; top:140px;">
+            🔒 选项锁定<br>显示"需要心机≥40"
+        </div>
+        
+        <!-- 下方：多轮累积 -->
+        <div style="position:absolute; left:40px; top:220px; width:920px; border-top:2px dashed #DEB887; padding-top:20px;">
+            <div style="font-size:14px; font-weight:600; color:#8B4513; margin-bottom:16px;">多轮累积效果示例</div>
+            
+            <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+                <div class="state-node input" style="position:relative;">
+                    第1章选择3次<br>
+                    <span style="font-size:11px;">心机: 30→45→60</span>
+                </div>
+                
+                <div style="color:#999; font-size:20px;">→</div>
+                
+                <div class="state-node process" style="position:relative;">
+                    第2章进入时<br>
+                    <span style="font-size:11px;">心机=60 已解锁2个隐藏选项</span>
+                </div>
+                
+                <div style="color:#999; font-size:20px;">→</div>
+                
+                <div class="state-node output" style="position:relative;">
+                    第6章结局<br>
+                    <span style="font-size:11px;">心机≥65 → 解锁"铁腕淑妃"结局</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 图例 -->
+        <div style="position:absolute; left:40px; top:420px; display:flex; gap:20px;">
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:#666;">
+                <div style="width:16px; height:16px; background:#E3F2FD; border:2px solid #4A90D9; border-radius:4px;"></div>输入
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:#666;">
+                <div style="width:16px; height:16px; background:#FFF3E0; border:2px solid #FF9800; border-radius:4px;"></div>处理
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:#666;">
+                <div style="width:16px; height:16px; background:#F3E5F5; border:2px solid #9C27B0; border-radius:4px;"></div>判断
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:#666;">
+                <div style="width:16px; height:16px; background:#E8F5E9; border:2px solid #4CAF50; border-radius:4px;"></div>解锁
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:#666;">
+                <div style="width:16px; height:16px; background:#FFEBEE; border:2px solid #F44336; border-radius:4px;"></div>锁定
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 画板5：结局页面 -->
+<div class="frame-wrapper">
+    <div class="frame-label">画板5：结局页面 (390×844)</div>
+    <div class="iphone-frame" id="frame5">
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons"><span>📶</span><span>🔋</span></div>
+        </div>
+        <div style="padding:40px 24px; text-align:center;">
+            <div style="font-size:28px; font-weight:700; color:#8B4513; margin-bottom:8px;">结局：运筹帷幄</div>
+            <div style="font-size:14px; color:#DAA520; margin-bottom:24px;">结局评级：<span style="font-size:36px; font-weight:700;">S</span> · 帝王之师</div>
+            
+            <div style="display:flex; gap:12px; justify-content:center; margin-bottom:32px;">
+                <div style="padding:12px 16px; background:#FAF0E6; border-radius:8px; border:1px solid #DEB887;">
+                    <div style="font-size:11px; color:#999;">声望</div>
+                    <div style="font-size:20px; font-weight:700; color:#8B4513;">75</div>
+                </div>
+                <div style="padding:12px 16px; background:#FAF0E6; border-radius:8px; border:1px solid #DEB887;">
+                    <div style="font-size:11px; color:#999;">好感</div>
+                    <div style="font-size:20px; font-weight:700; color:#8B4513;">80</div>
+                </div>
+                <div style="padding:12px 16px; background:#FAF0E6; border-radius:8px; border:1px solid #DEB887;">
+                    <div style="font-size:11px; color:#999;">智慧</div>
+                    <div style="font-size:20px; font-weight:700; color:#8B4513;">85</div>
+                </div>
+                <div style="padding:12px 16px; background:#FAF0E6; border-radius:8px; border:1px solid #DEB887;">
+                    <div style="font-size:11px; color:#999;">心机</div>
+                    <div style="font-size:20px; font-weight:700; color:#8B4513;">50</div>
+                </div>
+            </div>
+            
+            <div style="text-align:left; padding:20px; background:#FAF0E6; border-radius:12px; margin-bottom:24px;">
+                <p style="font-size:14px; color:#5C4033; line-height:1.8; margin-bottom:12px;">
+                    你巧妙地回避了问题的核心，将决策权交还给皇帝。他凝视你许久，忽然笑了。
+                </p>
+                <p style="font-size:14px; color:#5C4033; line-height:1.8;">
+                    你不仅展现了智慧，更展现了一个谋士应有的分寸感。皇帝在你身上看到了超越妃嫔的价值。
+                </p>
+            </div>
+            
+            <button style="width:100%; padding:14px; background:#8B4513; color:white; border:none; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer;">
+                重新开始
+            </button>
+            <div style="margin-top:12px; font-size:13px; color:#8B7355; cursor:pointer;">
+                查看其他结局 →
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
