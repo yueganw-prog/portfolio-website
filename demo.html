@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>凤谋 | AI互动叙事Demo v2</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .demo-container { max-width: 900px; margin: 0 auto; padding: 80px 24px 60px; min-height: 100vh; }
+        .demo-header { text-align: center; margin-bottom: 32px; }
+        .demo-header h1 { font-size: 2.5rem; color: var(--primary); margin-bottom: 4px; }
+        .demo-header p { color: var(--text-light); font-size: 0.95rem; }
+        
+        .game-layout { display: grid; grid-template-columns: 1fr 240px; gap: 20px; }
+        @media (max-width: 768px) { .game-layout { grid-template-columns: 1fr; } }
+        
+        .game-area { background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+        .story-header { background: var(--primary); color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .story-header h3 { font-size: 1.05rem; }
+        .story-status { font-size: 0.85rem; opacity: 0.9; }
+        .story-content { padding: 28px 20px; min-height: 280px; max-height: 500px; overflow-y: auto; }
+        
+        .narrator { color: var(--text-light); font-style: italic; margin-bottom: 16px; line-height: 1.8; padding: 14px; background: var(--bg); border-radius: 8px; font-size: 0.95rem; }
+        
+        .dialogue { margin-bottom: 12px; padding: 14px; border-radius: 8px; }
+        .dialogue.emperor { background: #FFF8E7; border-left: 3px solid var(--accent); }
+        .dialogue.player { background: #F0F8FF; border-left: 3px solid #4A90D9; }
+        .dialogue.npc { background: #F5F0FF; border-left: 3px solid #9B59B6; }
+        .dialogue.ai-tag { position: relative; }
+        .dialogue.ai-tag::after { content: 'AI生成'; position: absolute; top: 8px; right: 8px; font-size: 0.7rem; background: #E8F5E9; color: #2E7D32; padding: 2px 6px; border-radius: 4px; font-style: normal; }
+        .dialogue-name { font-weight: 600; margin-bottom: 4px; font-size: 0.85rem; }
+        .dialogue.emperor .dialogue-name { color: var(--accent); }
+        .dialogue.player .dialogue-name { color: #4A90D9; }
+        .dialogue.npc .dialogue-name { color: #9B59B6; }
+        .dialogue-text { color: var(--text); line-height: 1.7; font-size: 0.95rem; }
+        
+        .choices { padding: 20px; background: var(--bg-alt); border-top: 1px solid var(--border); }
+        .choices h4 { color: var(--text-light); font-size: 0.85rem; margin-bottom: 12px; }
+        .choice-btn { display: block; width: 100%; padding: 12px 16px; margin-bottom: 8px; background: white; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; text-align: left; font-size: 0.9rem; color: var(--text); transition: all 0.2s; }
+        .choice-btn:hover { border-color: var(--primary); background: var(--bg); }
+        .choice-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .choice-btn.locked { background: #f5f5f5; border-style: dashed; color: #999; }
+        .choice-btn .lock-hint { font-size: 0.75rem; color: #e74c3c; margin-top: 4px; }
+        .choice-btn:last-child { margin-bottom: 0; }
+        
+        .restart-btn { display: inline-block; padding: 12px 32px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+        
+        .state-panel { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 20px; position: sticky; top: 80px; }
+        .state-panel h3 { font-size: 1rem; color: var(--primary); margin-bottom: 16px; }
+        .state-item { margin-bottom: 14px; }
+        .state-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-light); margin-bottom: 4px; }
+        .state-bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+        .state-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+        .state-fill.reputation { background: linear-gradient(90deg, #FFD700, #FFA000); }
+        .state-fill.favor { background: linear-gradient(90deg, #FF6B6B, #EE5A24); }
+        .state-fill.wisdom { background: linear-gradient(90deg, #4ECDC4, #2C3E50); }
+        .state-fill.cunning { background: linear-gradient(90deg, #A29BFE, #6C5CE7); }
+        
+        .state-panel .chapter-info { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .state-panel .chapter-info h4 { font-size: 0.85rem; color: var(--text-light); margin-bottom: 8px; }
+        .state-panel .chapter-info p { font-size: 0.8rem; color: var(--text-light); line-height: 1.5; }
+        
+        .back-link { display: block; text-align: center; margin-top: 24px; color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+        
+        .game-over { text-align: center; padding: 48px 24px; }
+        .game-over h2 { color: var(--primary); margin-bottom: 16px; }
+        .game-over p { color: var(--text-light); margin-bottom: 24px; line-height: 1.8; }
+        .ending-stats { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+        .ending-stat { padding: 12px 20px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); }
+        .ending-stat .label { font-size: 0.8rem; color: var(--text-light); }
+        .ending-stat .value { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>凤谋</h1>
+            <p>AI驱动的古风宫廷互动叙事 · 系统策划作品集</p>
+        </div>
+        
+        <div class="game-layout">
+            <div class="game-area" id="gameArea">
+                <div class="story-header">
+                    <h3 id="sceneTitle">序章：入宫</h3>
+                    <span class="story-status" id="storyStatus">第1章 / 共6章</span>
+                </div>
+                <div class="story-content" id="storyContent"></div>
+                <div class="choices" id="choicesArea"></div>
+            </div>
+            
+            <div class="state-panel">
+                <h3>属性面板</h3>
+                <div class="state-item">
+                    <div class="state-label"><span>声望</span><span id="reputationVal">50</span></div>
+                    <div class="state-bar"><div class="state-fill reputation" id="reputationBar" style="width:50%"></div></div>
+                </div>
+                <div class="state-item">
+                    <div class="state-label"><span>皇帝好感</span><span id="favorVal">50</span></div>
+                    <div class="state-bar"><div class="state-fill favor" id="favorBar" style="width:50%"></div></div>
+                </div>
+                <div class="state-item">
+                    <div class="state-label"><span>智慧</span><span id="wisdomVal">50</span></div>
+                    <div class="state-bar"><div class="state-fill wisdom" id="wisdomBar" style="width:50%"></div></div>
+                </div>
+                <div class="state-item">
+                    <div class="state-label"><span>心机</span><span id="cunningVal">30</span></div>
+                    <div class="state-bar"><div class="state-fill cunning" id="cunningBar" style="width:30%"></div></div>
+                </div>
+                <div class="chapter-info">
+                    <h4>当前目标</h4>
+                    <p id="currentGoal">在大婚之夜给皇帝留下好印象</p>
+                </div>
+            </div>
+        </div>
+        
+        <a href="index.html" class="back-link">← 返回作品集</a>
+    </div>
+
+    <script>
+        const GS = {
+            chapter: 1, maxChapter: 6,
+            reputation: 50, favor: 50, wisdom: 50, cunning: 30,
+            history: [], currentScene: 'intro', flags: {}
+        };
+
+        const CHARS = {
+            emperor: { name: '皇帝 · 萧承煜', title: '当朝天子' },
+            player: { name: '淑妃 · 你', title: '礼部侍郎之女' },
+            huafei: { name: '华妃 · 柳如烟', title: '镇国将军之女' },
+            empress: { name: '皇后 · 苏婉清', title: '中宫之主' },
+            taihou: { name: '太后 · 陈氏', title: '慈宁宫主' },
+            maid: { name: '侍女 · 小翠', title: '永和宫侍女' }
+        };
+
+        const SCENES = {
+            intro: {
+                title: '序章：入宫', chapter: 1, goal: '在大婚之夜给皇帝留下好印象',
+                nodes: [
+                    { type: 'narrator', text: '大婚之夜，凤烛摇曳。你身着凤冠霞帔，端坐于永和宫中。窗外传来更鼓声，已是三更。' },
+                    { type: 'narrator', text: '你是当朝新封的淑妃，父亲是礼部侍郎。此番入宫，既是家族荣耀，也是步步惊心的开始。' },
+                    { type: 'dialogue', character: 'emperor', text: '淑妃，朕听闻你精通诗书。今日大婚，可有佳作献上？', ai: true },
+                ],
+                choices: [
+                    { text: '恭敬吟诗，展现才华', next: 'ch1_poem', effects: { favor: 10, wisdom: 5 } },
+                    { text: '谦辞推脱，以退为进', next: 'ch1_humble', effects: { favor: 5, wisdom: 10 } },
+                    { text: '反问皇帝，试探心意', next: 'ch1_probe', effects: { wisdom: 15, favor: -5 }, require: null },
+                    { text: '以诗喻志，暗表心迹', next: 'ch1_ambition', effects: { cunning: 15, favor: 5 }, require: { cunning: 40 } },
+                ]
+            },
+            ch1_poem: {
+                title: '第一章：诗才初显', chapter: 1, goal: '回应皇帝的试探',
+                nodes: [
+                    { type: 'narrator', text: '你轻启朱唇，吟诵了一首咏梅诗。皇帝眼中闪过一丝赞赏，却又迅速收敛。' },
+                    { type: 'dialogue', character: 'emperor', text: '好诗。"凌寒独自开"——淑妃果然有气节。只是这后宫之中，光有气节可不够。', ai: true },
+                    { type: 'narrator', text: '你注意到皇帝的手指在龙椅扶手上轻轻敲击，这是他思考时的习惯。' },
+                ],
+                choices: [
+                    { text: '妾身愿听陛下教诲', next: 'ch2_court', effects: { favor: 15 } },
+                    { text: '陛下是在提醒妾身吗？', next: 'ch2_court', effects: { wisdom: 10, cunning: 5 } },
+                ]
+            },
+            ch1_humble: {
+                title: '第一章：以退为进', chapter: 1, goal: '回应皇帝的试探',
+                nodes: [
+                    { type: 'narrator', text: '你低头敛目，声音轻柔。皇帝微微前倾，似乎对你的反应颇感兴趣。' },
+                    { type: 'dialogue', character: 'emperor', text: '哦？淑妃倒是谦逊。朕听闻你七步成诗，怎的今日倒谦让起来？', ai: true },
+                ],
+                choices: [
+                    { text: '陛下谬赞，妾身不过略通皮毛', next: 'ch2_court', effects: { favor: 10, wisdom: 5 } },
+                    { text: '诗乃小道，治家方为大体', next: 'ch2_court', effects: { wisdom: 15, favor: 5 } },
+                ]
+            },
+            ch1_probe: {
+                title: '第一章：试探龙颜', chapter: 1, goal: '回应皇帝的试探',
+                nodes: [
+                    { type: 'narrator', text: '你抬头直视龙颜，皇帝眼中闪过一丝惊讶，随即恢复平静。殿内气氛微妙地凝滞了一瞬。' },
+                    { type: 'dialogue', character: 'emperor', text: '淑妃倒是胆大。朕问你诗才，你倒反问起朕的心意来了？', ai: true },
+                    { type: 'narrator', text: '你注意到门外有侍卫的身影晃动，似乎在留意殿内的对话。' },
+                ],
+                choices: [
+                    { text: '妾身失礼，请陛下恕罪', next: 'ch2_court', effects: { favor: 5 } },
+                    { text: '陛下既有此问，想必心中已有答案', next: 'ch2_court', effects: { wisdom: 20, cunning: 10, favor: -10 } },
+                ]
+            },
+            ch1_ambition: {
+                title: '第一章：暗藏锋芒', chapter: 1, goal: '回应皇帝的试探',
+                nodes: [
+                    { type: 'narrator', text: '你以一首边塞诗暗喻朝局，皇帝的眼神骤然锐利。殿内空气仿佛凝固。' },
+                    { type: 'dialogue', character: 'emperor', text: '淑妃……你这诗，倒是让朕想起一个人。', ai: true },
+                    { type: 'narrator', text: '皇帝沉默良久，忽然笑了。那笑容意味深长，让你心中一凛。' },
+                    { type: 'dialogue', character: 'emperor', text: '有意思。 very有意思。', ai: true },
+                ],
+                choices: [
+                    { text: '陛下过誉了', next: 'ch2_court', effects: { favor: 10, cunning: 5 } },
+                    { text: '妾身只是有感而发', next: 'ch2_court', effects: { cunning: 10 } },
+                ]
+            },
+
+            ch2_court: {
+                title: '第二章：御花园之约', chapter: 2, goal: '在赏花宴中站稳脚跟',
+                nodes: [
+                    { type: 'narrator', text: '三日后，你收到皇后请帖，邀各宫嫔妃御花园赏花。你知此去必定暗流涌动。' },
+                    { type: 'narrator', text: '御花园中百花争艳，各宫嫔妃齐聚一堂。华妃柳如烟一袭红衣，格外夺目。' },
+                    { type: 'dialogue', character: 'huafei', text: '哟，这不是淑妃妹妹吗？大婚之夜独得圣恩，今日怎有空来赏花？', ai: true },
+                ],
+                choices: [
+                    { text: '华妃姐姐说笑了，妹妹刚到', next: 'ch2_confront1', effects: { favor: 5 } },
+                    { text: '姐姐风姿绰约，妹妹自愧不如', next: 'ch2_confront1', effects: { wisdom: 10 } },
+                    { text: '皇后娘娘宣召，妹妹不敢怠慢', next: 'ch2_confront1', effects: { favor: 10 } },
+                    { text: '姐姐这身红衣，倒像是要赴宴而非赏花', next: 'ch2_confront1', effects: { cunning: 15, favor: -5 }, require: { cunning: 40 } },
+                ]
+            },
+            ch2_confront1: {
+                title: '第二章：华妃的试探', chapter: 2, goal: '应对华妃的挑衅',
+                nodes: [
+                    { type: 'dialogue', character: 'huafei', text: '淑妃妹妹好一张利嘴。只是这后宫之中，光靠嘴皮子可活不长久。', ai: true },
+                    { type: 'narrator', text: '华妃身后的侍女端来一盏茶，茶汤色泽碧绿，清香扑鼻。' },
+                    { type: 'dialogue', character: 'huafei', text: '这是西湖龙井，妹妹尝尝？', ai: true },
+                ],
+                choices: [
+                    { text: '多谢姐姐好茶', next: 'ch2_tea', effects: { favor: 5 } },
+                    { text: '姐姐先请', next: 'ch2_tea', effects: { wisdom: 10 } },
+                    { text: '这茶……莫非是今年的新茶？', next: 'ch2_tea', effects: { wisdom: 15 }, require: { wisdom: 60 } },
+                ]
+            },
+            ch2_tea: {
+                title: '第二章：茶中玄机', chapter: 2, goal: '化解华妃的试探',
+                nodes: [
+                    { type: 'narrator', text: '你端起茶盏，轻啜一口。茶香沁人心脾，但你敏锐地察觉到华妃眼中的期待。' },
+                    { type: 'narrator', text: '这时，皇后款款而来，众人行礼。' },
+                    { type: 'dialogue', character: 'empress', text: '今日赏花，本宫备了彩头——西域进贡的夜明珠。不如以花为题，各赋诗一首？', ai: true },
+                ],
+                choices: [
+                    { text: '欣然应允，借诗明志', next: 'ch3_teaching', effects: { favor: 10, wisdom: 10 } },
+                    { text: '请华妃姐姐先请', next: 'ch3_teaching', effects: { wisdom: 15, cunning: 5 } },
+                    { text: '皇后娘娘出题，妾身自当奉陪', next: 'ch3_teaching', effects: { favor: 15 } },
+                ]
+            },
+
+            ch3_teaching: {
+                title: '第三章：太后召见', chapter: 3, goal: '在太后面前表现得体',
+                nodes: [
+                    { type: 'narrator', text: '赏花宴后第三日，太后突然召见各宫嫔妃。慈宁宫中气氛庄严，太后端坐凤椅之上。' },
+                    { type: 'dialogue', character: 'taihou', text: '哀家听闻新入宫的淑妃才貌双全，今日特意召来一见。', ai: true },
+                    { type: 'narrator', text: '太后的眼神锐利如鹰，仿佛能看透人心。你感到一阵无形的压力。' },
+                    { type: 'dialogue', character: 'taihou', text: '淑妃，你觉得这后宫之中，什么最重要？', ai: true },
+                ],
+                choices: [
+                    { text: '回太后，是忠心', next: 'ch4_night', effects: { favor: 15, wisdom: 5 } },
+                    { text: '回太后，是智慧', next: 'ch4_night', effects: { wisdom: 15 } },
+                    { text: '回太后，是本分', next: 'ch4_night', effects: { favor: 10, cunning: 10 } },
+                    { text: '回太后，是让陛下安心', next: 'ch4_night', effects: { favor: 20, wisdom: 5 }, require: { wisdom: 65 } },
+                ]
+            },
+
+            ch4_night: {
+                title: '第四章：永和宫的秘密', chapter: 4, goal: '发现后宫的暗流',
+                nodes: [
+                    { type: 'narrator', text: '深夜，你被一阵轻微的响动惊醒。侍女小翠匆匆赶来。' },
+                    { type: 'dialogue', character: 'maid', text: '娘娘，不好了！华妃的人在咱们宫外鬼鬼祟祟，不知在找什么。', ai: true },
+                    { type: 'narrator', text: '你披衣起身，透过窗缝看到几个黑影在院中搜寻。月光下，她们似乎在翻找什么。' },
+                ],
+                choices: [
+                    { text: '假装不知，明日再查', next: 'ch5_crisis', effects: { cunning: 15 } },
+                    { text: '直接出去质问', next: 'ch5_crisis', effects: { favor: 5, reputation: 10 } },
+                    { text: '让小翠去请侍卫', next: 'ch5_crisis', effects: { wisdom: 10, reputation: 5 } },
+                    { text: '暗中观察，记录她们的行为', next: 'ch5_crisis', effects: { cunning: 20, wisdom: 10 }, require: { cunning: 50 } },
+                ]
+            },
+
+            ch5_crisis: {
+                title: '第五章：御前对质', chapter: 5, goal: '在皇帝面前揭露真相',
+                nodes: [
+                    { type: 'narrator', text: '次日清晨，皇帝突然驾临永和宫。你注意到他的神色凝重。' },
+                    { type: 'dialogue', character: 'emperor', text: '淑妃，朕听说昨夜你宫中有些……动静？', ai: true },
+                    { type: 'narrator', text: '你知道，这是关键时刻。你的回答将决定皇帝对你的看法。' },
+                ],
+                choices: [
+                    { text: '如实禀报，华妃的人在搜宫', next: 'ch6_finale', effects: { favor: 10, reputation: 10 }, require: { wisdom: 55 } },
+                    { text: '轻描淡写，说是风吹草动', next: 'ch6_finale', effects: { cunning: 15 } },
+                    { text: '反问陛下是否知情', next: 'ch6_finale', effects: { wisdom: 15, favor: 5 } },
+                    { text: '呈上昨夜的观察记录', next: 'ch6_finale', effects: { favor: 20, reputation: 15, wisdom: 10 }, require: { cunning: 60 } },
+                ]
+            },
+
+            ch6_finale: {
+                title: '第六章：凤鸣九霄', chapter: 6, goal: '做出最终抉择',
+                nodes: [
+                    { type: 'narrator', text: '养心殿中，皇帝屏退左右，只留你一人。月光透过窗棂，洒在龙案之上。' },
+                    { type: 'dialogue', character: 'emperor', text: '淑妃，朕有一事相问。若有一日，朕与你父亲站在对立面，你会如何抉择？', ai: true },
+                    { type: 'narrator', text: '这个问题，你早已预料到。但当它真的来临时，你的心跳还是不由自主地加速了。' },
+                ],
+                choices: [
+                    { text: '陛下与父亲，皆是妾身至亲', next: 'ending_balanced', effects: { favor: 10, wisdom: 10 } },
+                    { text: '妾身只知忠君爱国', next: 'ending_loyal', effects: { favor: 20 } },
+                    { text: '妾身相信陛下自有公断', next: 'ending_wise', effects: { wisdom: 20 } },
+                    { text: '妾身愿为陛下分忧，哪怕大义灭亲', next: 'ending_ruthless', effects: { cunning: 25, favor: 15 }, require: { cunning: 65 } },
+                ]
+            },
+
+            ending_balanced: {
+                title: '结局：左右逢源', chapter: 6, ending: true,
+                endingText: '你选择了最稳妥的道路。皇帝沉默良久，最终点了点头。\n\n你既保全了家族，也赢得了皇帝的信任。后宫之路虽长，你已找到了属于自己的生存之道。\n\n这是最安全的选择，但也意味着你将永远在各方势力之间周旋。',
+                endingName: '中庸之道', endingScore: 'B'
+            },
+            ending_loyal: {
+                title: '结局：忠贞不渝', chapter: 6, ending: true,
+                endingText: '你毫不犹豫地选择了忠君。皇帝眼中闪过复杂的神色，最终化为一声轻叹。\n\n你或许失去了某些东西，但你的立场从未动摇。在这深宫之中，忠诚是最珍贵的品质，也是最危险的选择。',
+                endingName: '赤子之心', endingScore: 'A'
+            },
+            ending_wise: {
+                title: '结局：运筹帷幄', chapter: 6, ending: true,
+                endingText: '你巧妙地回避了问题的核心，将决策权交还给皇帝。他凝视你许久，忽然笑了。\n\n你不仅展现了智慧，更展现了一个谋士应有的分寸感。皇帝在你身上看到了超越妃嫔的价值。',
+                endingName: '帝王之师', endingScore: 'S'
+            },
+            ending_ruthless: {
+                title: '结局：铁腕淑妃', chapter: 6, ending: true,
+                endingText: '你的话语如同一把利刃，斩断了所有退路。皇帝的眼中闪过一丝震惊，随即化为欣赏。\n\n在这深宫之中，你选择了最决绝的道路。从此，再无人敢小觑淑妃。',
+                endingName: '权谋之路', endingScore: 'A'
+            }
+        };
+
+        function updateState() {
+            ['reputation','favor','wisdom','cunning'].forEach(k => {
+                GS[k] = Math.max(0, Math.min(100, GS[k]));
+                document.getElementById(k+'Val').textContent = GS[k];
+                document.getElementById(k+'Bar').style.width = GS[k]+'%';
+            });
+        }
+
+        function renderScene(sceneId) {
+            const scene = SCENES[sceneId];
+            if (!scene) return;
+            GS.currentScene = sceneId;
+            
+            document.getElementById('sceneTitle').textContent = scene.title;
+            document.getElementById('storyStatus').textContent = `第${scene.chapter}章 / 共${GS.maxChapter}章`;
+            document.getElementById('currentGoal').textContent = scene.goal || '';
+            
+            const content = document.getElementById('storyContent');
+            const choicesArea = document.getElementById('choicesArea');
+            
+            if (scene.ending) {
+                content.innerHTML = `
+                    <div class="game-over">
+                        <h2>${scene.title}</h2>
+                        <div class="ending-stats">
+                            <div class="ending-stat"><div class="label">声望</div><div class="value">${GS.reputation}</div></div>
+                            <div class="ending-stat"><div class="label">好感</div><div class="value">${GS.favor}</div></div>
+                            <div class="ending-stat"><div class="label">智慧</div><div class="value">${GS.wisdom}</div></div>
+                            <div class="ending-stat"><div class="label">心机</div><div class="value">${GS.cunning}</div></div>
+                        </div>
+                        <p style="white-space:pre-line">${scene.endingText}</p>
+                        <p style="margin-top:16px;font-size:0.9rem;color:var(--text-light)">结局评级：<strong style="font-size:1.5rem;color:var(--primary)">${scene.endingScore}</strong> · ${scene.endingName}</p>
+                        <button class="restart-btn" onclick="restartGame()" style="margin-top:24px">重新开始</button>
+                    </div>
+                `;
+                choicesArea.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            scene.nodes.forEach(node => {
+                if (node.type === 'narrator') {
+                    html += `<div class="narrator">${node.text}</div>`;
+                } else if (node.type === 'dialogue') {
+                    const cls = node.character === 'emperor' ? 'emperor' : node.character === 'player' ? 'player' : 'npc';
+                    const aiClass = node.ai ? ' ai-tag' : '';
+                    html += `<div class="dialogue ${cls}${aiClass}">
+                        <div class="dialogue-name">${CHARS[node.character].name}</div>
+                        <div class="dialogue-text">${node.text}</div>
+                    </div>`;
+                }
+            });
+            content.innerHTML = html;
+            content.scrollTop = content.scrollHeight;
+            
+            let choicesHtml = '<h4>请选择你的回应：</h4>';
+            scene.choices.forEach((choice, i) => {
+                let locked = false, lockMsg = '';
+                if (choice.require) {
+                    for (const [k, v] of Object.entries(choice.require)) {
+                        if (GS[k] < v) { locked = true; lockMsg = `需要 ${k === 'wisdom' ? '智慧' : k === 'cunning' ? '心机' : k} ≥ ${v}`; break; }
+                    }
+                }
+                if (locked) {
+                    choicesHtml += `<button class="choice-btn locked" disabled>${choice.text}<div class="lock-hint">🔒 ${lockMsg}</div></button>`;
+                } else {
+                    choicesHtml += `<button class="choice-btn" onclick="makeChoice(${i})">${choice.text}</button>`;
+                }
+            });
+            choicesArea.innerHTML = choicesHtml;
+        }
+
+        let transitioning = false;
+        function makeChoice(i) {
+            if (transitioning) return;
+            transitioning = true;
+            
+            const btns = document.querySelectorAll('.choice-btn');
+            btns.forEach(b => { b.disabled = true; });
+            
+            const scene = SCENES[GS.currentScene];
+            const choice = scene.choices[i];
+            
+            if (choice.effects) {
+                for (const [k, v] of Object.entries(choice.effects)) {
+                    if (GS[k] !== undefined) GS[k] += v;
+                }
+            }
+            updateState();
+            
+            GS.history.push({ scene: GS.currentScene, choice: i });
+            
+            const content = document.getElementById('storyContent');
+            const div = document.createElement('div');
+            div.className = 'dialogue player';
+            div.innerHTML = `<div class="dialogue-name">淑妃 · 你</div><div class="dialogue-text">${choice.text}</div>`;
+            content.appendChild(div);
+            content.scrollTop = content.scrollHeight;
+            
+            setTimeout(() => {
+                transitioning = false;
+                renderScene(choice.next);
+            }, 600);
+        }
+
+        function restartGame() {
+            Object.assign(GS, { chapter:1, reputation:50, favor:50, wisdom:50, cunning:30, history:[], currentScene:'intro', flags:{} });
+            updateState();
+            renderScene('intro');
+        }
+
+        updateState();
+        renderScene('intro');
+    </script>
+</body>
+</html>

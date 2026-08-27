@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt设计文档 | 凤谋</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .doc-container { max-width: 900px; margin: 0 auto; padding: 80px 24px 60px; }
+        .doc-header { margin-bottom: 40px; }
+        .doc-header h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 6px; }
+        
+        .doc-section { background: white; border-radius: 12px; padding: 36px; margin-bottom: 24px; border: 1px solid var(--border); }
+        .doc-section h2 { font-size: 1.3rem; color: var(--primary); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+        .doc-section h3 { font-size: 1.05rem; color: var(--text); margin: 20px 0 10px; }
+        .doc-section p { color: var(--text-light); margin-bottom: 12px; line-height: 1.8; }
+        
+        .code-block { background: #1a1a2e; color: #e0e0e0; padding: 18px; border-radius: 8px; font-family: 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.6; overflow-x: auto; margin: 14px 0; white-space: pre-wrap; }
+        .code-block .comment { color: #6a9955; }
+        .code-block .keyword { color: #569cd6; }
+        .code-block .string { color: #ce9178; }
+        .code-block .variable { color: #4ec9b0; }
+        
+        .doc-list { margin: 14px 0; padding-left: 22px; }
+        .doc-list li { color: var(--text-light); margin-bottom: 6px; line-height: 1.6; }
+        .doc-list li strong { color: var(--text); }
+        
+        .highlight-box { background: var(--bg); border-left: 4px solid var(--accent); padding: 18px; margin: 18px 0; border-radius: 0 8px 8px 0; }
+        .highlight-box p { margin-bottom: 0; }
+        
+        .char-card { background: var(--bg-alt); border-radius: 8px; padding: 20px; margin: 14px 0; border: 1px solid var(--border); }
+        .char-card h4 { color: var(--primary); margin-bottom: 10px; }
+        
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        .comparison-table th { background: var(--bg); color: var(--primary); padding: 10px; text-align: left; border: 1px solid var(--border); font-size: 0.9rem; }
+        .comparison-table td { padding: 10px; border: 1px solid var(--border); color: var(--text-light); font-size: 0.9rem; }
+        
+        .back-link { display: block; text-align: center; margin-top: 28px; color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="doc-container">
+        <div class="doc-header">
+            <h1>Prompt设计文档</h1>
+            <p style="color:var(--text-light)">《凤谋》AI互动叙事的完整Prompt工程拆解</p>
+        </div>
+
+        <div class="doc-section">
+            <h2>一、系统架构总览</h2>
+            <p>整个AI叙事系统由四层构成：角色层、上下文层、约束层、输出层。</p>
+            
+            <div class="code-block">
+<span class="comment">// 完整的Prompt调用结构</span>
+{
+  <span class="keyword">"system_prompt"</span>: <span class="string">"[角色卡] + [行为约束] + [输出格式]"</span>,
+  <span class="keyword">"context_window"</span>: {
+    <span class="keyword">"world_setting"</span>: <span class="string">"架空古代王朝宫廷"</span>,
+    <span class="keyword">"scene_state"</span>: <span class="string">"当前章节 + 场景描述"</span>,
+    <span class="keyword">"relationship_graph"</span>: <span class="string">"角色间关系状态"</span>,
+    <span class="keyword">"player_stats"</span>: <span class="string">"声望/好感/智慧/心机"</span>,
+    <span class="keyword">"dialogue_history"</span>: <span class="string">"最近10轮对话摘要"</span>,
+    <span class="keyword">"flags"</span>: <span class="string">"已触发的关键事件标记"</span>
+  },
+  <span class="keyword">"user_message"</span>: <span class="string">"玩家选择的选项文本"</span>,
+  <span class="keyword">"output_schema"</span>: <span class="string">"JSON格式约束"</span>
+}
+            </div>
+        </div>
+
+        <div class="doc-section">
+            <h2>二、角色卡设计</h2>
+            <p>每个角色都有完整的Prompt模板，定义其性格、说话风格、知识边界和隐藏信息。</p>
+            
+            <div class="char-card">
+                <h4>皇帝 · 萧承煜</h4>
+                <div class="code-block">
+<span class="keyword">角色名</span>: 萧承煜
+<span class="keyword">身份</span>: 当朝天子，28岁
+<span class="keyword">核心性格</span>: 城府极深，表面温和实则多疑
+<span class="keyword">正面特质</span>: [聪明, 隐忍, 有文学素养, 善于观察]
+<span class="keyword">弱点</span>: 对才华横溢的女子容易心软
+<span class="keyword">说话风格</span>: 文雅含蓄，常引经据典，话中有话
+<span class="keyword">禁忌</span>: 不会粗俗用语，不会直白表达真实意图
+<span class="keyword">秘密</span>: 正在秘密调查前朝余孽，对新入宫嫔妃都有防备
+<span class="keyword">当前情绪</span>: 平静中带着试探</div>
+            </div>
+            
+            <div class="char-card">
+                <h4>华妃 · 柳如烟</h4>
+                <div class="code-block">
+<span class="keyword">角色名</span>: 柳如烟
+<span class="keyword">身份</span>: 华妃，镇国将军之女
+<span class="keyword">核心性格</span>: 骄横跋扈，善妒，但并非蠢人
+<span class="keyword">正面特质</span>: [直觉敏锐, 有家族背景, 表演能力强]
+<span class="keyword">弱点</span>: 容易被激怒，嫉妒心强
+<span class="keyword">说话风格</span>: 含沙射影，表面夸赞实则讽刺
+<span class="keyword">禁忌</span>: 不会直接侮辱他人，会用暗示
+<span class="keyword">秘密</span>: 与皇后暗中对立，正在拉拢势力</div>
+            </div>
+            
+            <div class="char-card">
+                <h4>皇后 · 苏婉清</h4>
+                <div class="code-block">
+<span class="keyword">角色名</span>: 苏婉清
+<span class="keyword">身份</span>: 中宫之主
+<span class="keyword">核心性格</span>: 城府深沉，表面温和实则掌控全局
+<span class="keyword">正面特质</span>: [智慧过人, 善于布局, 端庄得体]
+<span class="keyword">弱点</span>: 过于依赖掌控感，有时失去人性温度
+<span class="keyword">说话风格</span>: 端庄得体，绵里藏针，每句话都有深意
+<span class="keyword">禁忌</span>: 不会失态，不会直接表达不满
+<span class="keyword">秘密</span>: 正在暗中调查各嫔妃背景</div>
+            </div>
+        </div>
+
+        <div class="doc-section">
+            <h2>三、上下文注入策略</h2>
+            <p>每次API调用时，需要注入完整的上下文信息，确保AI输出连贯且符合设定。</p>
+            
+            <h3>3.1 上下文窗口管理</h3>
+            <div class="highlight-box">
+                <p><strong>策略：</strong>滑动窗口 + 摘要压缩。保留最近10轮对话完整内容，更早的对话压缩为摘要。</p>
+                <p><strong>示例：</strong>"玩家在大婚夜展现了诗才，皇帝表示赞赏但有所保留。"</p>
+            </div>
+            
+            <h3>3.2 状态注入</h3>
+            <div class="code-block">
+<span class="comment">// 状态如何影响AI输出</span>
+{
+  <span class="keyword">"favor"</span>: <span class="string">"70"</span>,  <span class="comment">// 高好感 → AI更友善</span>
+  <span class="keyword">"wisdom"</span>: <span class="string">"65"</span>, <span class="comment">// 高智慧 → 解锁隐藏选项</span>
+  <span class="keyword">"cunning"</span>: <span class="string">"45"</span>, <span class="comment">// 心机值 → 影响对话策略</span>
+  <span class="keyword">"flags"</span>: [<span class="string">"met_huafei"</span>, <span class="string">"tea_crisis"</span>]
+}
+
+<span class="comment">// Prompt中的条件指令</span>
+"如果favor > 60，皇帝的态度更温和；
+ 如果cunning > 50，皇帝会更警惕；
+ 如果flags包含'tea_crisis'，皇帝会询问此事。"</div>
+            
+            <h3>3.3 输出格式约束</h3>
+            <div class="code-block">
+<span class="comment">// 强制JSON输出</span>
+你必须严格按照以下JSON格式输出，不要添加任何额外文本：
+
+{
+  <span class="keyword">"dialogue"</span>: <span class="string">"角色的回复，50字以内"</span>,
+  <span class="keyword">"emotion"</span>: <span class="string">"情绪标签：平静/愉悦/愤怒/惊讶/深思/试探"</span>,
+  <span class="keyword">"inner_thought"</span>: <span class="string">"角色内心独白，20字以内（可选）"</span>,
+  <span class="keyword">"suggested_choices"</span>: [
+    <span class="string">"选项A描述"</span>,
+    <span class="string">"选项B描述"</span>,
+    <span class="string">"选项C描述"</span>
+  ]
+}</div>
+        </div>
+
+        <div class="doc-section">
+            <h2>四、分支叙事引擎设计</h2>
+            <p>玩家选择不仅推动剧情，还通过状态系统影响后续可用选项和剧情走向。</p>
+            
+            <h3>4.1 状态驱动的分支</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>状态阈值</th><th>解锁内容</th><th>设计意图</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>心机 ≥ 40</td><td>解锁隐藏选项（暗藏锋芒）</td><td>鼓励玩家尝试不同策略</td></tr>
+                    <tr><td>智慧 ≥ 60</td><td>解锁洞察型选项</td><td>奖励深入思考的玩家</td></tr>
+                    <tr><td>好感 ≥ 70</td><td>皇帝态度更温和</td><td>正向反馈循环</td></tr>
+                    <tr><td>心机 ≥ 65</td><td>解锁铁腕结局路线</td><td>高风险高回报策略</td></tr>
+                </tbody>
+            </table>
+            
+            <h3>4.2 Flag系统</h3>
+            <p>关键选择设置flag，影响后续剧情可用选项和NPC态度。</p>
+            <div class="code-block">
+<span class="comment">// Flag触发示例</span>
+玩家选择"暗中观察华妃的人" → 触发flag: <span class="variable">"spied_huafei"</span>
+  → 后续华妃对话中，皇帝会询问此事
+  → 解锁"呈上观察记录"选项（需cunning ≥ 60）</div>
+        </div>
+
+        <div class="doc-section">
+            <h2>五、调优迭代记录</h2>
+            
+            <h3>5.1 问题：角色人设崩塌</h3>
+            <p><strong>现象：</strong>皇帝突然说出不符合人设的话。</p>
+            <p><strong>解决：</strong>每次调用重复注入角色卡核心信息 + 限制输出长度。</p>
+            
+            <h3>5.2 问题：选项重复</h3>
+            <p><strong>现象：</strong>AI生成的三个选项区别不大。</p>
+            <p><strong>解决：</strong>在prompt中要求"三个选项必须代表不同的策略取向（顺从/主动/试探）"。</p>
+            
+            <h3>5.3 问题：格式不稳定</h3>
+            <p><strong>现象：</strong>AI有时输出纯文本而非JSON。</p>
+            <p><strong>解决：</strong>添加"你只能输出JSON"约束 + 正反示例 + 重试机制。</p>
+            
+            <div class="highlight-box">
+                <p><strong>迭代效果：</strong>格式成功率从60%提升至95%+，角色一致性从70%提升至90%+</p>
+            </div>
+        </div>
+
+        <div class="doc-section">
+            <h2>六、可体验的内容</h2>
+            <p>以下展示了不同参数下AI输出的实际对比，可在<a href="prompt-debugger.html">Prompt调试器</a>中交互体验。</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>场景</th><th>默认输出</th><th>修改参数后</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>大婚之夜</td>
+                        <td>"淑妃倒是谦逊。只是朕好奇，你这'愿听教诲'——是真心求教，还是在敷衍朕？"</td>
+                        <td>"淑妃有此心意，朕心甚慰。"（好感↑后）</td>
+                    </tr>
+                    <tr>
+                        <td>华妃试探</td>
+                        <td>"哟，妹妹这话说的。刚到？姐姐我可是在这等了许久了。"</td>
+                        <td>"妹妹说的哪里话。姐姐只是想念妹妹了。"（好感↑后）</td>
+                    </tr>
+                    <tr>
+                        <td>太后问对</td>
+                        <td>"智慧？淑妃，你可知这后宫之中，多少人以'智慧'自居，最终却败在了自己的聪明上？"</td>
+                        <td>"嗯，有见地。不过淑妃，光有智慧还不够。"（好感↑后）</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← 返回作品集</a>
+</body>
+</html>

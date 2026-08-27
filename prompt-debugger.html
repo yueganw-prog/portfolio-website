@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt调试器 | 凤谋</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .debugger-container { max-width: 1000px; margin: 0 auto; padding: 80px 24px 60px; }
+        .debugger-header { margin-bottom: 32px; }
+        .debugger-header h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 6px; }
+        .debugger-header p { color: var(--text-light); font-size: 0.95rem; }
+        
+        .debugger-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+        @media (max-width: 768px) { .debugger-layout { grid-template-columns: 1fr; } }
+        
+        .panel { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 20px; }
+        .panel h3 { font-size: 1rem; color: var(--primary); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        
+        .char-list { list-style: none; }
+        .char-item { padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; border: 1px solid transparent; }
+        .char-item:hover { background: var(--bg); }
+        .char-item.active { background: var(--bg); border-color: var(--primary); }
+        .char-item .name { font-weight: 600; color: var(--text); font-size: 0.95rem; }
+        .char-item .role { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
+        
+        .prompt-editor { margin-bottom: 20px; }
+        .prompt-editor label { display: block; font-size: 0.85rem; color: var(--text-light); margin-bottom: 6px; font-weight: 500; }
+        .prompt-editor textarea, .prompt-editor input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.9rem; resize: vertical; }
+        .prompt-editor textarea { min-height: 80px; line-height: 1.5; }
+        
+        .param-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        
+        .output-section { background: #1a1a2e; border-radius: 8px; padding: 20px; margin-top: 16px; }
+        .output-section h4 { color: #4ECDC4; font-size: 0.9rem; margin-bottom: 12px; }
+        .output-text { color: #e0e0e0; font-size: 0.9rem; line-height: 1.7; white-space: pre-wrap; font-family: 'Fira Code', monospace; }
+        .output-label { color: #6a9955; font-size: 0.8rem; margin-bottom: 4px; }
+        
+        .btn-generate { display: inline-block; padding: 10px 24px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
+        .btn-generate:hover { background: var(--primary-light); }
+        
+        .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+        @media (max-width: 768px) { .comparison { grid-template-columns: 1fr; } }
+        
+        .back-link { display: block; text-align: center; margin-top: 32px; color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="debugger-container">
+        <div class="debugger-header">
+            <h1>Prompt调试器</h1>
+            <p>修改角色参数，观察AI输出如何变化。这是Prompt Engineering的核心能力展示。</p>
+        </div>
+        
+        <div class="debugger-layout">
+            <div class="panel">
+                <h3>角色选择</h3>
+                <ul class="char-list" id="charList">
+                    <li class="char-item active" onclick="selectChar('emperor')">
+                        <div class="name">皇帝 · 萧承煜</div>
+                        <div class="role">城府深沉，善试探</div>
+                    </li>
+                    <li class="char-item" onclick="selectChar('huafei')">
+                        <div class="name">华妃 · 柳如烟</div>
+                        <div class="role">骄横跋扈，善妒</div>
+                    </li>
+                    <li class="char-item" onclick="selectChar('empress')">
+                        <div class="name">皇后 · 苏婉清</div>
+                        <div class="role">城府深沉，绵里藏针</div>
+                    </li>
+                    <li class="char-item" onclick="selectChar('taihou')">
+                        <div class="name">太后 · 陈氏</div>
+                        <div class="role">威严庄重，洞察人心</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div>
+                <div class="panel" id="editorPanel">
+                    <h3>Prompt编辑器</h3>
+                    
+                    <div class="prompt-editor">
+                        <label>角色设定 (System Prompt)</label>
+                        <textarea id="systemPrompt"></textarea>
+                    </div>
+                    
+                    <div class="param-row">
+                        <div class="prompt-editor">
+                            <label>说话风格</label>
+                            <input type="text" id="speechStyle" placeholder="如：文雅含蓄，常引经据典">
+                        </div>
+                        <div class="prompt-editor">
+                            <label>情绪倾向</label>
+                            <input type="text" id="emotion" placeholder="如：平静、试探、不满">
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-editor">
+                        <label>场景上下文 (Context)</label>
+                        <textarea id="context" style="min-height:60px"></textarea>
+                    </div>
+                    
+                    <div class="prompt-editor">
+                        <label>玩家输入 (User Message)</label>
+                        <input type="text" id="userInput" placeholder="如：妾身愿听陛下教诲">
+                    </div>
+                    
+                    <button class="btn-generate" onclick="generateOutput()">生成AI回复</button>
+                </div>
+                
+                <div class="output-section" id="outputSection">
+                    <h4>AI输出对比</h4>
+                    <div class="comparison">
+                        <div>
+                            <div class="output-label">当前参数输出：</div>
+                            <div class="output-text" id="outputCurrent">点击"生成AI回复"查看结果</div>
+                        </div>
+                        <div>
+                            <div class="output-label">修改参数后的输出：</div>
+                            <div class="output-text" id="outputModified">修改左侧参数后点击生成</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel" style="margin-top:16px">
+                    <h3>完整Prompt模板</h3>
+                    <div class="output-section" style="background:#f8f9fa;border:1px solid var(--border)">
+                        <div class="output-text" id="fullPrompt" style="color:#333"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <a href="index.html" class="back-link">← 返回作品集</a>
+    </div>
+
+    <script>
+        const CHAR_DATA = {
+            emperor: {
+                name: '萧承煜',
+                systemPrompt: '你是当朝天子萧承煜，28岁。你城府极深，表面温和实则多疑。你正在秘密调查前朝余孽，对新入宫的嫔妃都有防备。你说话文雅含蓄，常以诗文试探他人。你欣赏有才华但不张扬的女子。',
+                speechStyle: '文雅含蓄，常引经据典，话中有话',
+                emotion: '平静中带着试探',
+                context: '大婚之夜，你来到永和宫看望新封的淑妃。你想试探她是否与前朝余孽有关。',
+                userInput: '妾身愿听陛下教诲',
+                outputs: {
+                    default: '淑妃倒是谦逊。只是朕好奇，你这"愿听教诲"——是真心求教，还是在敷衍朕？',
+                    friendly: '淑妃有此心意，朕心甚慰。这后宫之中，能有你这般通透的女子，实属难得。',
+                    cold: '教诲？朕何时说过要教你什么。淑妃，你这话可有些……自作聪明了。',
+                    playful: '哦？淑妃想听朕的教诲？那朕倒要考考你——你觉得朕最在意什么？'
+                }
+            },
+            huafei: {
+                name: '柳如烟',
+                systemPrompt: '你是华妃柳如烟，镇国将军之女。你骄横跋扈，善妒，但并非蠢人。你表面热情实则暗藏机锋，说话含沙射影。你与皇后暗中对立，视新入宫的嫔妃为威胁。',
+                speechStyle: '含沙射影，话中有话，表面夸赞实则讽刺',
+                emotion: '表面热情，内心警惕',
+                context: '御花园赏花宴上，你第一次见到新封的淑妃。你想给她一个下马威。',
+                userInput: '华妃姐姐说笑了，妹妹刚到',
+                outputs: {
+                    default: '哟，妹妹这话说的。刚到？姐姐我可是在这等了许久了。妹妹这架子，倒是比皇后娘娘还大呢。',
+                    friendly: '妹妹说的哪里话。姐姐只是想念妹妹了，想早些见到你。来，这边坐。',
+                    cold: '刚到？淑妃妹妹，这御花园的路可不好走啊。姐姐担心你以后会经常迷路呢。',
+                    playful: '妹妹这张小嘴真甜。不过姐姐可不是好糊弄的——你那咏梅诗，皇帝可夸了好一阵呢。'
+                }
+            },
+            empress: {
+                name: '苏婉清',
+                systemPrompt: '你是皇后苏婉清，中宫之主。你城府深沉，表面温和实则掌控全局。你正在暗中调查各嫔妃的背景。你说话端庄得体，绵里藏针，从不直接表达不满。',
+                speechStyle: '端庄得体，绵里藏针，每句话都有深意',
+                emotion: '温和中带着威严',
+                context: '赏花宴上，你想观察新入宫的淑妃。你知道华妃会先出手试探。',
+                userInput: '请华妃姐姐先请',
+                outputs: {
+                    default: '淑妃倒是懂得谦让。不过这赋诗嘛，本宫倒想先听听你的。毕竟，皇帝可是对你赞不绝口呢。',
+                    friendly: '淑妃妹妹不必拘礼。今日赏花，大家都是姐妹，随意便好。',
+                    cold: '淑妃这是在推辞吗？本宫出题，你却不接，这可不太合规矩。',
+                    playful: '哟，淑妃这是想让华妃先出丑呢。不过妹妹放心，华妃的诗……也就那样。'
+                }
+            },
+            taihou: {
+                name: '陈氏',
+                systemPrompt: '你是太后陈氏，先帝正宫。你威严庄重，洞察人心。你虽然不常过问后宫之事，但对一切了如指掌。你说话简短有力，每句话都直击要害。',
+                speechStyle: '简短有力，直击要害，不容置疑',
+                emotion: '威严中带着审视',
+                context: '你召见新入宫的淑妃。你想亲自判断她是否值得皇帝信任。',
+                userInput: '回太后，是智慧',
+                outputs: {
+                    default: '智慧？淑妃，你可知这后宫之中，多少人以"智慧"自居，最终却败在了自己的聪明上？',
+                    friendly: '嗯，有见地。不过淑妃，光有智慧还不够。你还要有……分寸。',
+                    cold: '智慧？淑妃，你入宫才几日，就敢在哀家面前谈智慧？',
+                    playful: '哦？淑妃倒是自信。那哀家问你——你觉得自己比华妃聪明多少？'
+                }
+            }
+        };
+
+        let currentChar = 'emperor';
+
+        function selectChar(key) {
+            currentChar = key;
+            document.querySelectorAll('.char-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            const data = CHAR_DATA[key];
+            document.getElementById('systemPrompt').value = data.systemPrompt;
+            document.getElementById('speechStyle').value = data.speechStyle;
+            document.getElementById('emotion').value = data.emotion;
+            document.getElementById('context').value = data.context;
+            document.getElementById('userInput').value = data.userInput;
+            
+            document.getElementById('outputCurrent').textContent = '点击"生成AI回复"查看结果';
+            document.getElementById('outputModified').textContent = '修改左侧参数后点击生成';
+            
+            updateFullPrompt();
+        }
+
+        function generateOutput() {
+            const data = CHAR_DATA[currentChar];
+            const speech = document.getElementById('speechStyle').value;
+            const emotion = document.getElementById('emotion').value;
+            
+            let outputKey = 'default';
+            if (speech.includes('友好') || speech.includes('温和')) outputKey = 'friendly';
+            else if (speech.includes('冷') || speech.includes('严厉')) outputKey = 'cold';
+            else if (speech.includes('俏皮') || speech.includes('活泼')) outputKey = 'playful';
+            
+            document.getElementById('outputCurrent').textContent = data.outputs[outputKey] || data.outputs.default;
+            document.getElementById('outputModified').textContent = `（修改参数后，AI输出会相应变化。例如将"文雅含蓄"改为"直白犀利"，输出风格会完全不同）`;
+            
+            updateFullPrompt();
+        }
+
+        function updateFullPrompt() {
+            const data = CHAR_DATA[currentChar];
+            const prompt = `System: ${data.systemPrompt}
+
+说话风格要求: ${document.getElementById('speechStyle').value}
+当前情绪: ${document.getElementById('emotion').value}
+
+--- 场景上下文 ---
+${document.getElementById('context').value}
+
+--- 对话历史 ---
+[之前已有多轮对话...]
+
+--- 当前用户输入 ---
+${document.getElementById('userInput').value}
+
+--- 输出格式要求 ---
+请以JSON格式输出:
+{
+  "dialogue": "角色的回复内容",
+  "emotion": "当前情绪标签",
+  "inner_thought": "角色的内心独白（可选）",
+  "suggested_choices": ["选项1", "选项2", "选项3"]
+}`;
+            document.getElementById('fullPrompt').textContent = prompt;
+        }
+
+        selectChar('emperor');
+    </script>
+</body>
+</html>
