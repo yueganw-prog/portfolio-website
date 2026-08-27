@@ -155,8 +155,8 @@
                     { type: 'narrator', text: '你注意到皇帝的手指在龙椅扶手上轻轻敲击，这是他思考时的习惯。' },
                 ],
                 choices: [
-                    { text: '妾身愿听陛下教诲', next: 'ch2_court', effects: { favor: 15 } },
-                    { text: '陛下是在提醒妾身吗？', next: 'ch2_court', effects: { wisdom: 10, cunning: 5 } },
+                    { text: '妾身愿听陛下教诲', next: 'ch2_court', effects: { favor: 15, reputation: 5 } },
+                    { text: '陛下是在提醒妾身吗？', next: 'ch2_court', effects: { wisdom: 10, cunning: 5, reputation: 5 } },
                 ]
             },
             ch1_humble: {
@@ -166,8 +166,8 @@
                     { type: 'dialogue', character: 'emperor', text: '哦？淑妃倒是谦逊。朕听闻你七步成诗，怎的今日倒谦让起来？', ai: true },
                 ],
                 choices: [
-                    { text: '陛下谬赞，妾身不过略通皮毛', next: 'ch2_court', effects: { favor: 10, wisdom: 5 } },
-                    { text: '诗乃小道，治家方为大体', next: 'ch2_court', effects: { wisdom: 15, favor: 5 } },
+                    { text: '陛下谬赞，妾身不过略通皮毛', next: 'ch2_court', effects: { favor: 10, wisdom: 5, reputation: 5 } },
+                    { text: '诗乃小道，治家方为大体', next: 'ch2_court', effects: { wisdom: 15, favor: 5, reputation: 10 } },
                 ]
             },
             ch1_probe: {
@@ -178,8 +178,8 @@
                     { type: 'narrator', text: '你注意到门外有侍卫的身影晃动，似乎在留意殿内的对话。' },
                 ],
                 choices: [
-                    { text: '妾身失礼，请陛下恕罪', next: 'ch2_court', effects: { favor: 5 } },
-                    { text: '陛下既有此问，想必心中已有答案', next: 'ch2_court', effects: { wisdom: 20, cunning: 10, favor: -10 } },
+                    { text: '妾身失礼，请陛下恕罪', next: 'ch2_court', effects: { favor: 5, reputation: 5 } },
+                    { text: '陛下既有此问，想必心中已有答案', next: 'ch2_court', effects: { wisdom: 20, cunning: 10, favor: -5, reputation: 10 } },
                 ]
             },
             ch1_ambition: {
@@ -204,10 +204,10 @@
                     { type: 'dialogue', character: 'huafei', text: '哟，这不是淑妃妹妹吗？大婚之夜独得圣恩，今日怎有空来赏花？', ai: true },
                 ],
                 choices: [
-                    { text: '华妃姐姐说笑了，妹妹刚到', next: 'ch2_confront1', effects: { favor: 5 } },
-                    { text: '姐姐风姿绰约，妹妹自愧不如', next: 'ch2_confront1', effects: { wisdom: 10 } },
-                    { text: '皇后娘娘宣召，妹妹不敢怠慢', next: 'ch2_confront1', effects: { favor: 10 } },
-                    { text: '姐姐这身红衣，倒像是要赴宴而非赏花', next: 'ch2_confront1', effects: { cunning: 15, favor: -5 }, require: { cunning: 40 } },
+                    { text: '华妃姐姐说笑了，妹妹刚到', next: 'ch2_confront1', effects: { favor: 5, reputation: 5 } },
+                    { text: '姐姐风姿绰约，妹妹自愧不如', next: 'ch2_confront1', effects: { wisdom: 10, reputation: 5 } },
+                    { text: '皇后娘娘宣召，妹妹不敢怠慢', next: 'ch2_confront1', effects: { favor: 10, reputation: 10 } },
+                    { text: '姐姐这身红衣，倒像是要赴宴而非赏花', next: 'ch2_confront1', effects: { cunning: 15, favor: -5, reputation: 5 }, require: { cunning: 40 } },
                 ]
             },
             ch2_confront1: {
@@ -218,9 +218,9 @@
                     { type: 'dialogue', character: 'huafei', text: '这是西湖龙井，妹妹尝尝？', ai: true },
                 ],
                 choices: [
-                    { text: '多谢姐姐好茶', next: 'ch2_tea', effects: { favor: 5 } },
-                    { text: '姐姐先请', next: 'ch2_tea', effects: { wisdom: 10 } },
-                    { text: '这茶……莫非是今年的新茶？', next: 'ch2_tea', effects: { wisdom: 15 }, require: { wisdom: 60 } },
+                    { text: '多谢姐姐好茶', next: 'ch2_tea', effects: { favor: 5, reputation: 5 } },
+                    { text: '姐姐先请', next: 'ch2_tea', effects: { wisdom: 10, reputation: 10 } },
+                    { text: '这茶……莫非是今年的新茶？', next: 'ch2_tea', effects: { wisdom: 15, reputation: 10 }, require: { wisdom: 60 } },
                 ]
             },
             ch2_tea: {
@@ -231,9 +231,9 @@
                     { type: 'dialogue', character: 'empress', text: '今日赏花，本宫备了彩头——西域进贡的夜明珠。不如以花为题，各赋诗一首？', ai: true },
                 ],
                 choices: [
-                    { text: '欣然应允，借诗明志', next: 'ch3_teaching', effects: { favor: 10, wisdom: 10 } },
-                    { text: '请华妃姐姐先请', next: 'ch3_teaching', effects: { wisdom: 15, cunning: 5 } },
-                    { text: '皇后娘娘出题，妾身自当奉陪', next: 'ch3_teaching', effects: { favor: 15 } },
+                    { text: '欣然应允，借诗明志', next: 'ch3_teaching', effects: { favor: 10, wisdom: 10, reputation: 10 } },
+                    { text: '请华妃姐姐先请', next: 'ch3_teaching', effects: { wisdom: 15, cunning: 5, reputation: 10 } },
+                    { text: '皇后娘娘出题，妾身自当奉陪', next: 'ch3_teaching', effects: { favor: 15, reputation: 15 } },
                 ]
             },
 
@@ -246,10 +246,10 @@
                     { type: 'dialogue', character: 'taihou', text: '淑妃，你觉得这后宫之中，什么最重要？', ai: true },
                 ],
                 choices: [
-                    { text: '回太后，是忠心', next: 'ch4_night', effects: { favor: 15, wisdom: 5 } },
-                    { text: '回太后，是智慧', next: 'ch4_night', effects: { wisdom: 15 } },
-                    { text: '回太后，是本分', next: 'ch4_night', effects: { favor: 10, cunning: 10 } },
-                    { text: '回太后，是让陛下安心', next: 'ch4_night', effects: { favor: 20, wisdom: 5 }, require: { wisdom: 65 } },
+                    { text: '回太后，是忠心', next: 'ch4_night', effects: { favor: 15, wisdom: 5, reputation: 15 } },
+                    { text: '回太后，是智慧', next: 'ch4_night', effects: { wisdom: 15, reputation: 10 } },
+                    { text: '回太后，是本分', next: 'ch4_night', effects: { favor: 10, cunning: 10, reputation: 15 } },
+                    { text: '回太后，是让陛下安心', next: 'ch4_night', effects: { favor: 20, wisdom: 5, reputation: 20 }, require: { wisdom: 65 } },
                 ]
             },
 
