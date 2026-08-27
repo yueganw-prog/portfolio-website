@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma设计规范 | 凤谋</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .spec-container { max-width: 900px; margin: 0 auto; padding: 80px 24px 60px; }
+        .spec-header { margin-bottom: 32px; }
+        .spec-header h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 6px; }
+        
+        .spec-section { background: white; border-radius: 12px; padding: 32px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .spec-section h2 { font-size: 1.2rem; color: var(--primary); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+        .spec-section h3 { font-size: 1rem; color: var(--text); margin: 16px 0 8px; }
+        .spec-section p { color: var(--text-light); margin-bottom: 10px; line-height: 1.7; }
+        
+        .wireframe-placeholder { background: var(--bg); border: 2px dashed var(--border); border-radius: 8px; padding: 40px; text-align: center; margin: 16px 0; }
+        .wireframe-placeholder .label { color: var(--text-light); font-size: 0.9rem; }
+        .wireframe-placeholder .size { color: var(--primary); font-size: 0.8rem; margin-top: 4px; }
+        
+        .flow-diagram { background: #f8f9fa; border-radius: 8px; padding: 24px; margin: 16px 0; font-family: monospace; font-size: 0.85rem; line-height: 1.6; color: var(--text); white-space: pre; overflow-x: auto; }
+        
+        .color-palette { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+        .color-swatch { width: 48px; height: 48px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        
+        .component-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 12px 0; }
+        .component-item { background: var(--bg); padding: 14px; border-radius: 8px; border: 1px solid var(--border); }
+        .component-item .name { font-weight: 600; color: var(--text); font-size: 0.9rem; margin-bottom: 4px; }
+        .component-item .desc { color: var(--text-light); font-size: 0.8rem; }
+        
+        .back-link { display: block; text-align: center; margin-top: 28px; color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="spec-container">
+        <div class="spec-header">
+            <h1>Figma设计规范</h1>
+            <p style="color:var(--text-light)">《凤谋》交互原型设计指南 — 按此规范在Figma中绘制</p>
+        </div>
+
+        <div class="spec-section">
+            <h2>一、需要绘制的页面（共5个画板）</h2>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>画板</th><th>内容</th><th>尺寸</th><th>用途</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. 对话主界面</strong></td><td>游戏核心交互界面</td><td>375×812 (iPhone)</td><td>展示UI层级和操作路径</td></tr>
+                    <tr><td><strong>2. 属性面板</strong></td><td>状态系统展示</td><td>375×812</td><td>展示数值驱动的分支设计</td></tr>
+                    <tr><td><strong>3. 分支流程图</strong></td><td>完整剧情分支结构</td><td>1200×800</td><td>展示叙事架构设计能力</td></tr>
+                    <tr><td><strong>4. 状态流转图</strong></td><td>选择→属性变化→解锁</td><td>1200×600</td><td>展示系统设计思维</td></tr>
+                    <tr><td><strong>5. 结局页面</strong></td><td>结局展示+评分</td><td>375×812</td><td>展示完整体验闭环</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="spec-section">
+            <h2>二、设计规范</h2>
+            
+            <h3>配色方案</h3>
+            <div class="color-palette">
+                <div class="color-swatch" style="background:#8B4513">主色</div>
+                <div class="color-swatch" style="background:#CD853F">辅色</div>
+                <div class="color-swatch" style="background:#DAA520">强调</div>
+                <div class="color-swatch" style="background:#FDF5E6; color:#333">背景</div>
+                <div class="color-swatch" style="background:#2C1810">文字</div>
+            </div>
+            
+            <h3>字体</h3>
+            <p>标题：PingFang SC Semibold / 20px<br>
+            正文：PingFang SC Regular / 14px<br>
+            标签：PingFang SC Regular / 12px</p>
+            
+            <h3>圆角</h3>
+            <p>卡片：12px / 按钮：8px / 标签：24px / 头像：50%</p>
+        </div>
+
+        <div class="spec-section">
+            <h2>三、画板1：对话主界面</h2>
+            <p>展示游戏核心交互界面的UI层级和操作路径。</p>
+            
+            <div class="wireframe-placeholder">
+                <div class="label">在此处绘制对话界面线框图</div>
+                <div class="size">375 × 812 px</div>
+            </div>
+            
+            <h3>包含元素</h3>
+            <div class="component-list">
+                <div class="component-item">
+                    <div class="name">顶部导航栏</div>
+                    <div class="desc">章节标题 + 进度（第X章/共6章）</div>
+                </div>
+                <div class="component-item">
+                    <div class="name">对话区域</div>
+                    <div class="desc">NPC对话（左侧）+ 玩家选择（右侧）</div>
+                </div>
+                <div class="component-item">
+                    <div class="name">选项按钮区</div>
+                    <div class="desc">2-4个可点击选项，含锁定状态</div>
+                </div>
+                <div class="component-item">
+                    <div class="name">AI生成标签</div>
+                    <div class="desc">右上角"AI生成"标识</div>
+                </div>
+            </div>
+            
+            <h3>交互标注</h3>
+            <p>用Figma的Prototype功能标注：<br>
+            · 选项按钮 → 点击后显示玩家对话 → 500ms后切换到下一场景<br>
+            · 锁定选项 → 灰色+虚线边框+锁图标+提示文字</p>
+        </div>
+
+        <div class="spec-section">
+            <h2>四、画板2：属性面板</h2>
+            <p>展示状态系统如何影响游戏进程。</p>
+            
+            <div class="wireframe-placeholder">
+                <div class="label">在此处绘制属性面板线框图</div>
+                <div class="size">375 × 812 px</div>
+            </div>
+            
+            <h3>包含元素</h3>
+            <div class="component-list">
+                <div class="component-item">
+                    <div class="name">四维属性条</div>
+                    <div class="desc">声望/好感/智慧/心机 各带进度条</div>
+                </div>
+                <div class="component-item">
+                    <div class="name">当前目标</div>
+                    <div class="desc">显示当前章节的任务目标</div>
+                </div>
+                <div class="component-item">
+                    <div class="name">属性变化提示</div>
+                    <div class="desc">选择后属性+/-的动画效果</div>
+                </div>
+                <div class="component-item">
+                    <div class="name">解锁提示</div>
+                    <div class="desc">属性达标时解锁新选项的提示</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="spec-section">
+            <h2>五、画板3：分支流程图</h2>
+            <p>展示完整的6章剧情分支结构，体现叙事架构设计能力。</p>
+            
+            <div class="flow-diagram">
+┌─────────────┐
+│  序章：入宫   │
+│  (3个选项)   │
+└──────┬──────┘
+       │
+   ┌───┼───┐
+   ▼   ▼   ▼
+┌────┐┌────┐┌────┐
+│诗才││谦退││试探│
+│+10 ││+5  ││+15 │
+│好感 ││智慧 ││心机 │
+└─┬──┘└─┬──┘└─┬──┘
+  │     │     │
+  └─────┼─────┘
+        ▼
+┌─────────────┐
+│ 第二章：御花园 │
+│  (4个选项)    │
+└──────┬──────┘
+       │
+   ┌───┼───┐
+   ▼   ▼   ▼
+ ... (以此类推)
+        </div>
+            
+            <h3>绘制要点</h3>
+            <p>· 每个节点标注章节名和选项数量<br>
+            · 箭头旁标注属性变化（如+10好感）<br>
+            · 用颜色区分不同路线（红色=好感线，蓝色=智慧线，紫色=心机线）<br>
+            · 标注锁定选项的解锁条件</p>
+        </div>
+
+        <div class="spec-section">
+            <h2>六、画板4：状态流转图</h2>
+            <p>展示"选择→属性变化→解锁新内容"的系统设计。</p>
+            
+            <div class="flow-diagram">
+┌──────────┐    ┌──────────┐    ┌──────────┐
+│ 玩家选择  │───▶│ 属性计算  │───▶│ 解锁判断  │
+│ "反问皇帝"│    │ 心机+15  │    │ 心机≥40? │
+└──────────┘    │ 好感-5   │    └────┬─────┘
+                └──────────┘         │
+                              ┌──────┴──────┐
+                              ▼             ▼
+                        ┌─────────┐   ┌─────────┐
+                        │ YES:解锁 │   │ NO:锁定 │
+                        │ 隐藏选项 │   │ 显示条件 │
+                        └─────────┘   └─────────┘
+        </div>
+            
+            <h3>绘制要点</h3>
+            <p>· 展示完整的状态流转逻辑<br>
+            · 标注每个节点的输入/输出<br>
+            · 用判断节点（菱形）表示条件分支<br>
+            · 展示属性阈值如何影响游戏内容</p>
+        </div>
+
+        <div class="spec-section">
+            <h2>七、画板5：结局页面</h2>
+            <p>展示结局展示、评分系统和重玩入口。</p>
+            
+            <div class="wireframe-placeholder">
+                <div class="label">在此处绘制结局页面线框图</div>
+                <div class="size">375 × 812 px</div>
+            </div>
+            
+            <h3>包含元素</h3>
+            <div class="component-list">
+                <div class="component-item">
+                    <div class="name">结局标题</div>
+                    <div class="desc">结局名称 + 评级（S/A/B）</div>
+                </div>
+                <div class="component-item">
+                    <div class="name">属性总结</div>
+                    <div class="desc">四项属性最终值展示</div>
+                </div>
+                <div class="component-item">
+                    <div class="name">结局文案</div>
+                    <div class="desc">AI生成的结局描述</div>
+                </div>
+                <div class="component-item">
+                    <div class="name">重玩按钮</div>
+                    <div class="desc">重新开始 + 查看其他结局</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← 返回作品集</a>
+</body>
+</html>
