@@ -87,8 +87,8 @@ body {
 }
 
 .nav-brand-img {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     object-fit: contain;
     opacity: 0.6;
     filter: brightness(0.9) contrast(1.1);
@@ -1026,15 +1026,13 @@ footer {
     position: fixed;
     bottom: 32px;
     right: 32px;
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--red);
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0.55;
     z-index: 50;
-    background: rgba(10,10,10,0.9);
     text-decoration: none;
     cursor: pointer;
     transition: opacity 0.3s;
@@ -1045,17 +1043,10 @@ footer {
 }
 
 .seal-stamp-img {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     object-fit: contain;
     filter: brightness(0.85) contrast(1.1) sepia(0.15);
-}
-
-.seal-stamp::before {
-    content: '';
-    position: absolute;
-    inset: 3px;
-    border: 0.5px solid rgba(139,37,0,0.3);
 }
 
 /* ===== 竖排装饰 ===== */
