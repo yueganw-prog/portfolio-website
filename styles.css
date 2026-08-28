@@ -330,14 +330,24 @@ body {
 }
 
 .features li {
-    padding: 10px 0;
+    padding: 12px 0;
     color: var(--text-dim);
-    border-bottom: 1px solid rgba(42,42,42,0.5);
+    border-bottom: 1px solid rgba(212,175,55,0.15);
     line-height: 2;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
 }
 
 .features li:last-child {
     border-bottom: none;
+}
+
+.features li strong {
+    color: var(--gold);
+    flex-shrink: 0;
+    font-weight: 400;
+    letter-spacing: 1px;
 }
 
 .tech-tags {
@@ -357,6 +367,13 @@ body {
 }
 
 /* 按钮 - 牌匾风格 */
+.btn-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
 .btn-primary {
     display: inline-block;
     padding: 14px 32px;
@@ -365,11 +382,10 @@ body {
     text-decoration: none;
     font-size: 0.9rem;
     transition: all 0.3s;
-    margin-right: 20px;
-    margin-bottom: 12px;
     letter-spacing: 3px;
     position: relative;
     overflow: hidden;
+    vertical-align: middle;
 }
 
 .btn-primary::before {
@@ -401,7 +417,6 @@ body {
     font-size: 0.9rem;
     border: 1px solid var(--gold);
     transition: all 0.3s;
-    margin-bottom: 12px;
     letter-spacing: 3px;
 }
 
