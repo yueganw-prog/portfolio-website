@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>游戏策划作品集 | AI原生/叙事方向</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- 水墨背景 -->
@@ -18,59 +18,57 @@
                 <feGaussianBlur stdDeviation="15"/>
             </filter>
             <radialGradient id="ink-grad1" cx="15%" cy="25%">
-                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.08"/>
+                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.06"/>
                 <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
             </radialGradient>
             <radialGradient id="ink-grad2" cx="85%" cy="75%">
-                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.03"/>
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.02"/>
                 <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
             </radialGradient>
             <radialGradient id="ink-grad3" cx="50%" cy="40%">
-                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.05"/>
+                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.04"/>
                 <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
             </radialGradient>
         </defs>
-        <!-- 水墨晕染层 -->
         <ellipse cx="150" cy="200" rx="450" ry="280" fill="url(#ink-grad1)" filter="url(#ink-blur)"/>
         <ellipse cx="1300" cy="650" rx="400" ry="250" fill="url(#ink-grad2)" filter="url(#ink-blur)"/>
         <ellipse cx="700" cy="400" rx="600" ry="350" fill="url(#ink-grad3)" filter="url(#ink-blur)"/>
-        <!-- 远山剪影 -->
         <path d="M0,750 Q100,680 200,720 T400,690 T550,730 T700,680 T850,720 T1000,700 T1150,740 T1300,690 T1440,710 L1440,900 L0,900 Z" 
-              fill="rgba(212,175,55,0.02)" filter="url(#ink-blur)"/>
+              fill="rgba(212,175,55,0.015)" filter="url(#ink-blur)"/>
         <path d="M0,800 Q150,740 300,780 T500,750 T650,790 T850,740 T1050,770 T1200,750 T1440,780 L1440,900 L0,900 Z" 
-              fill="rgba(255,255,255,0.015)" filter="url(#ink-blur)"/>
-        <!-- 云纹 -->
-        <g opacity="0.04" filter="url(#ink-blur-light)">
+              fill="rgba(255,255,255,0.01)" filter="url(#ink-blur)"/>
+        <g opacity="0.03" filter="url(#ink-blur-light)">
             <path d="M100,150 Q130,120 160,150 Q190,120 220,150 Q190,180 160,150" fill="#d4af37"/>
             <path d="M1200,200 Q1230,170 1260,200 Q1290,170 1320,200 Q1290,230 1260,200" fill="#d4af37"/>
-            <path d="M600,100 Q630,70 660,100 Q690,70 720,100 Q690,130 660,100" fill="#ffffff"/>
         </g>
-        <!-- 抽象水墨笔触 -->
         <path d="M0,450 Q200,400 400,450 T800,420 T1200,460 T1440,430" 
-              stroke="rgba(212,175,55,0.025)" stroke-width="120" fill="none" filter="url(#ink-blur)"/>
-        <path d="M0,500 Q300,480 600,520 T1000,490 T1440,510" 
-              stroke="rgba(255,255,255,0.02)" stroke-width="100" fill="none" filter="url(#ink-blur)"/>
+              stroke="rgba(212,175,55,0.02)" stroke-width="100" fill="none" filter="url(#ink-blur)"/>
     </svg>
 
-    <!-- 飘落粒子 -->
     <canvas id="particles" class="particles-canvas"></canvas>
 
+    <!-- 导航 -->
     <nav class="navbar">
-        <div class="nav-brand">弈</div>
+        <a href="#home" class="nav-brand">
+            <div class="nav-seal">弈</div>
+            <span class="nav-brand-text">YI STUDIO</span>
+        </a>
         <ul class="nav-links">
-            <li><a href="#home">首页</a></li>
-            <li><a href="#ai-demo">作品一</a></li>
-            <li><a href="#prompt-doc">作品二</a></li>
-            <li><a href="#analysis">作品三</a></li>
-            <li><a href="#about">关于我</a></li>
+            <li><a href="#home"><span class="nav-cn">首页</span><span class="nav-en">Home</span></a></li>
+            <li><a href="#ai-demo"><span class="nav-cn">凤谋</span><span class="nav-en">Feng Mou</span></a></li>
+            <li><a href="#prompt-doc"><span class="nav-cn">Prompt</span><span class="nav-en">Design</span></a></li>
+            <li><a href="#analysis"><span class="nav-cn">分析</span><span class="nav-en">Analysis</span></a></li>
+            <li><a href="#about"><span class="nav-cn">档案</span><span class="nav-en">Profile</span></a></li>
         </ul>
     </nav>
 
+    <!-- Hero -->
     <section id="home" class="hero">
         <div class="hero-content">
             <h1>游戏系统策划</h1>
-            <p class="subtitle">AI原生 · 叙事方向</p>
-            <div class="ink-divider"><span>◇</span></div>
+            <div class="hero-en">GAME SYSTEM DESIGNER</div>
+            <div class="hero-line"></div>
+            <p class="subtitle">AI 原生 · 叙事方向</p>
             <p class="desc">致力于探索AI驱动的游戏叙事设计，将大语言模型的不确定性转化为可控的游戏体验。</p>
             <div class="hero-tags">
                 <span class="tag">Prompt Engineering</span>
@@ -79,12 +77,20 @@
                 <span class="tag">系统思维</span>
             </div>
         </div>
+        <div class="hero-vertical">AI · 叙事 · 游戏设计</div>
     </section>
 
+    <!-- 卷一 · 凤谋 -->
     <section id="ai-demo" class="section">
         <div class="container">
-            <h2>作品一</h2>
-            <div class="ink-divider"><span>AI互动叙事Demo</span></div>
+            <div class="section-header">
+                <div class="section-num">壹</div>
+                <div class="section-title-group">
+                    <div class="section-title">凤谋</div>
+                    <div class="section-subtitle">SCROLL 01 — AI INTERACTIVE NARRATIVE</div>
+                </div>
+            </div>
+            <div class="section-line"></div>
             <p class="section-desc">《凤谋》— 古风宫廷AI互动叙事体验</p>
             
             <div class="project-showcase">
@@ -120,10 +126,17 @@
         </div>
     </section>
 
-    <section id="prompt-doc" class="section section-alt">
+    <!-- 卷二 · Prompt -->
+    <section id="prompt-doc" class="section">
         <div class="container">
-            <h2>作品二</h2>
-            <div class="ink-divider"><span>Prompt设计文档</span></div>
+            <div class="section-header">
+                <div class="section-num">贰</div>
+                <div class="section-title-group">
+                    <div class="section-title">Prompt 工程</div>
+                    <div class="section-subtitle">SCROLL 02 — PROMPT ENGINEERING</div>
+                </div>
+            </div>
+            <div class="section-line"></div>
             <p class="section-desc">AI互动叙事的Prompt工程拆解</p>
             
             <div class="doc-grid">
@@ -151,10 +164,17 @@
         </div>
     </section>
 
+    <!-- 卷三 · 分析 -->
     <section id="analysis" class="section">
         <div class="container">
-            <h2>作品三</h2>
-            <div class="ink-divider"><span>游戏叙事分析</span></div>
+            <div class="section-header">
+                <div class="section-num">叁</div>
+                <div class="section-title-group">
+                    <div class="section-title">系统分析</div>
+                    <div class="section-subtitle">SCROLL 03 — SYSTEM ANALYSIS</div>
+                </div>
+            </div>
+            <div class="section-line"></div>
             <p class="section-desc">《崩坏：星穹铁道》系统拆解与叙事设计研究</p>
             
             <div class="analysis-content">
@@ -192,10 +212,18 @@
         </div>
     </section>
 
-    <section id="about" class="section section-alt">
+    <!-- 档案 -->
+    <section id="about" class="section">
         <div class="container">
-            <h2>关于我</h2>
-            <div class="ink-divider"><span>人物档案</span></div>
+            <div class="section-header">
+                <div class="section-num">档</div>
+                <div class="section-title-group">
+                    <div class="section-title">人物档案</div>
+                    <div class="section-subtitle">PROFILE — CANDIDATE</div>
+                </div>
+            </div>
+            <div class="section-line"></div>
+            
             <div class="about-content">
                 <div class="about-text">
                     <div class="dialogue-box">
@@ -260,21 +288,19 @@
 
     <footer>
         <div class="container">
-            <p>© 2026 游戏策划作品集</p>
+            <p>© 2026 YI STUDIO — 游戏策划作品集</p>
         </div>
     </footer>
 
-    <!-- 印章装饰 -->
     <div class="seal-stamp">弈</div>
 
-    <!-- 飘落粒子脚本 -->
     <script>
     (function() {
         const canvas = document.getElementById('particles');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const count = 30;
+        const count = 20;
 
         function resize() {
             canvas.width = window.innerWidth;
@@ -287,11 +313,11 @@
             return {
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height - canvas.height,
-                size: Math.random() * 2 + 0.5,
-                speedY: Math.random() * 0.3 + 0.1,
-                speedX: Math.random() * 0.2 - 0.1,
-                opacity: Math.random() * 0.3 + 0.1,
-                color: Math.random() > 0.5 ? '#d4af37' : '#ffffff'
+                size: Math.random() * 1.5 + 0.3,
+                speedY: Math.random() * 0.2 + 0.05,
+                speedX: Math.random() * 0.1 - 0.05,
+                opacity: Math.random() * 0.2 + 0.05,
+                color: Math.random() > 0.6 ? '#d4af37' : '#ffffff'
             };
         }
 
