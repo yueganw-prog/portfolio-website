@@ -6,11 +6,10 @@
 
 :root {
     --black: #0a0a0a;
-    --black-light: #1a1a1a;
+    --black-light: #111;
     --gold: #d4af37;
     --gold-dim: #8b7500;
     --gold-light: #f4d03f;
-    --ink: rgba(255,255,255,0.03);
     --text: #e8e8e8;
     --text-dim: #888;
     --border: #2a2a2a;
@@ -24,22 +23,6 @@ body {
     overflow-x: hidden;
 }
 
-/* 水墨纹理背景 */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(ellipse at 15% 50%, rgba(255,255,255,0.02) 0%, transparent 50%),
-        radial-gradient(ellipse at 85% 30%, rgba(212,175,55,0.02) 0%, transparent 40%),
-        radial-gradient(ellipse at 50% 80%, rgba(255,255,255,0.01) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
-}
-
 .container {
     max-width: 1000px;
     margin: 0 auto;
@@ -48,13 +31,25 @@ body::before {
     z-index: 1;
 }
 
+/* 水墨背景 SVG */
+.ink-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+}
+
 /* 导航 */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px;
-    background: rgba(10, 10, 10, 0.95);
+    background: rgba(10, 10, 10, 0.9);
     backdrop-filter: blur(10px);
     position: fixed;
     width: 100%;
@@ -99,36 +94,36 @@ body::before {
     position: relative;
 }
 
-/* 水墨晕染装饰 */
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(212,175,55,0.03) 0%, transparent 70%);
-    border-radius: 50%;
-    filter: blur(60px);
-    pointer-events: none;
-}
-
 .hero h1 {
-    font-size: 3rem;
+    font-size: 3.2rem;
     font-weight: 400;
     color: var(--gold);
     margin-bottom: 16px;
-    letter-spacing: 16px;
-    text-shadow: 0 0 40px rgba(212,175,55,0.2);
+    letter-spacing: 20px;
+    text-shadow: 0 0 60px rgba(212,175,55,0.3);
+    position: relative;
+}
+
+/* 毛笔笔触下划线 */
+.hero h1::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    border-radius: 2px;
 }
 
 .subtitle {
     font-size: 1.1rem;
     color: var(--text-dim);
-    margin-bottom: 40px;
+    margin-bottom: 48px;
     letter-spacing: 8px;
     font-weight: 300;
+    margin-top: 24px;
 }
 
 .desc {
@@ -154,39 +149,61 @@ body::before {
     color: var(--gold);
     letter-spacing: 2px;
     transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.tag::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.tag:hover::before {
+    left: 100%;
 }
 
 .tag:hover {
-    background: var(--gold);
-    color: var(--black);
+    border-color: var(--gold);
+    box-shadow: 0 0 15px rgba(212,175,55,0.2);
 }
 
-/* 金色分隔线 */
-.gold-divider {
+/* 水墨分隔线 */
+.ink-divider {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 24px 0 40px;
-    gap: 12px;
+    margin: 32px 0 48px;
+    position: relative;
 }
 
-.gold-divider::before,
-.gold-divider::after {
+.ink-divider::before {
     content: '';
-    width: 80px;
+    position: absolute;
+    width: 200px;
     height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
 }
 
-.gold-divider span {
+.ink-divider span {
+    position: relative;
+    z-index: 1;
+    background: var(--black);
+    padding: 0 20px;
     color: var(--gold);
-    font-size: 0.7rem;
-    letter-spacing: 4px;
+    font-size: 0.75rem;
+    letter-spacing: 6px;
 }
 
 /* 板块 */
 .section {
     padding: 100px 0;
+    position: relative;
 }
 
 .section-alt {
@@ -194,10 +211,10 @@ body::before {
 }
 
 .section h2 {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     color: var(--gold);
     margin-bottom: 8px;
-    letter-spacing: 8px;
+    letter-spacing: 10px;
     font-weight: 400;
     text-align: center;
 }
@@ -218,28 +235,27 @@ body::before {
     position: relative;
 }
 
-/* 角落装饰 */
+/* 回纹角落装饰 */
 .project-showcase::before,
 .project-showcase::after {
     content: '';
     position: absolute;
-    width: 24px;
-    height: 24px;
-    border: 1px solid var(--gold);
+    width: 30px;
+    height: 30px;
 }
 
 .project-showcase::before {
     top: -1px;
     left: -1px;
-    border-right: none;
-    border-bottom: none;
+    border-top: 2px solid var(--gold);
+    border-left: 2px solid var(--gold);
 }
 
 .project-showcase::after {
     bottom: -1px;
     right: -1px;
-    border-left: none;
-    border-top: none;
+    border-bottom: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
 }
 
 .project-info h3 {
@@ -310,7 +326,7 @@ body::before {
 
 .btn-primary:hover {
     background: var(--gold-light);
-    box-shadow: 0 0 20px rgba(212,175,55,0.3);
+    box-shadow: 0 0 30px rgba(212,175,55,0.4);
 }
 
 .btn-secondary {
@@ -343,10 +359,27 @@ body::before {
     padding: 32px;
     border: 1px solid var(--border);
     transition: all 0.3s;
+    position: relative;
+}
+
+.doc-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
 .doc-card:hover {
     border-color: var(--gold-dim);
+}
+
+.doc-card:hover::before {
+    opacity: 1;
 }
 
 .doc-card h3 {
@@ -388,6 +421,23 @@ body::before {
     background: var(--black-light);
     padding: 20px;
     border: 1px solid var(--border);
+    position: relative;
+}
+
+.analysis-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.3s;
+}
+
+.analysis-item:hover::after {
+    width: 80%;
 }
 
 .analysis-item h4 {
@@ -409,6 +459,18 @@ body::before {
     padding: 40px;
     border-left: 2px solid var(--gold);
     margin-bottom: 32px;
+    position: relative;
+}
+
+.analysis-highlight::before {
+    content: '引';
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 4rem;
+    color: var(--gold);
+    opacity: 0.1;
+    font-family: "Noto Serif SC", serif;
 }
 
 .analysis-highlight h3 {
@@ -449,15 +511,25 @@ blockquote {
     position: relative;
 }
 
+/* 卷轴装饰 */
 .dialogue-box::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 3px;
+    width: 4px;
     height: 100%;
-    background: var(--gold);
-    opacity: 0.5;
+    background: linear-gradient(to bottom, var(--gold), var(--gold-dim), transparent);
+}
+
+.dialogue-box::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at bottom right, rgba(212,175,55,0.1) 0%, transparent 70%);
 }
 
 .dialogue-box .speaker {
@@ -580,6 +652,7 @@ footer {
     
     .hero h1 {
         font-size: 2rem;
+        letter-spacing: 12px;
     }
     
     .doc-grid {

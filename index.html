@@ -8,6 +8,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- 水墨背景 -->
+    <svg class="ink-bg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+        <defs>
+            <filter id="ink-turbulence">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="30"/>
+            </filter>
+            <filter id="ink-blur">
+                <feGaussianBlur stdDeviation="20"/>
+            </filter>
+            <radialGradient id="ink-grad1" cx="20%" cy="30%">
+                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.08"/>
+                <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="ink-grad2" cx="80%" cy="70%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.03"/>
+                <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+            </radialGradient>
+        </defs>
+        <!-- 水墨晕染层 -->
+        <ellipse cx="200" cy="300" rx="300" ry="200" fill="url(#ink-grad1)" filter="url(#ink-blur)"/>
+        <ellipse cx="1200" cy="600" rx="250" ry="180" fill="url(#ink-grad2)" filter="url(#ink-blur)"/>
+        <!-- 抽象水墨笔触 -->
+        <path d="M0,450 Q200,400 400,450 T800,420 T1200,460 T1440,430" 
+              stroke="rgba(212,175,55,0.03)" stroke-width="80" fill="none" filter="url(#ink-blur)"/>
+        <path d="M0,500 Q300,480 600,520 T1000,490 T1440,510" 
+              stroke="rgba(255,255,255,0.02)" stroke-width="60" fill="none" filter="url(#ink-blur)"/>
+    </svg>
+
     <nav class="navbar">
         <div class="nav-brand">弈</div>
         <ul class="nav-links">
@@ -25,7 +54,7 @@
         <div class="hero-content">
             <h1>游戏系统策划</h1>
             <p class="subtitle">AI原生 · 叙事方向</p>
-            <div class="gold-divider"><span>◆</span></div>
+            <div class="ink-divider"><span>◇</span></div>
             <p class="desc">致力于探索AI驱动的游戏叙事设计，将大语言模型的不确定性转化为可控的游戏体验。</p>
             <div class="hero-tags">
                 <span class="tag">Prompt Engineering</span>
@@ -39,7 +68,7 @@
     <section id="ai-demo" class="section">
         <div class="container">
             <h2>作品一</h2>
-            <div class="gold-divider"><span>AI互动叙事Demo</span></div>
+            <div class="ink-divider"><span>AI互动叙事Demo</span></div>
             <p class="section-desc">《凤谋》— 古风宫廷AI互动叙事体验</p>
             
             <div class="project-showcase">
@@ -76,7 +105,7 @@
     <section id="prompt-doc" class="section section-alt">
         <div class="container">
             <h2>作品二</h2>
-            <div class="gold-divider"><span>Prompt设计文档</span></div>
+            <div class="ink-divider"><span>Prompt设计文档</span></div>
             <p class="section-desc">AI互动叙事的Prompt工程拆解</p>
             
             <div class="doc-grid">
@@ -107,7 +136,7 @@
     <section id="analysis" class="section">
         <div class="container">
             <h2>作品三</h2>
-            <div class="gold-divider"><span>游戏叙事分析</span></div>
+            <div class="ink-divider"><span>游戏叙事分析</span></div>
             <p class="section-desc">《崩坏：星穹铁道》系统拆解与叙事设计研究</p>
             
             <div class="analysis-content">
@@ -148,7 +177,7 @@
     <section id="about" class="section section-alt">
         <div class="container">
             <h2>关于我</h2>
-            <div class="gold-divider"><span>人物档案</span></div>
+            <div class="ink-divider"><span>人物档案</span></div>
             <div class="about-content">
                 <div class="about-text">
                     <div class="dialogue-box">
