@@ -65,6 +65,24 @@ h1, h2, h3, .nav-brand {
     }
 }
 
+/* 装饰性花纹 */
+.ornament {
+    text-align: center;
+    margin: 20px 0;
+    color: var(--accent-light);
+    font-size: 1.2rem;
+    letter-spacing: 8px;
+}
+
+/* 卡片发光效果 */
+.doc-card:hover,
+.analysis-item:hover,
+.project-showcase:hover {
+    box-shadow: 0 0 20px rgba(233, 30, 99, 0.2),
+                0 0 40px rgba(233, 30, 99, 0.1);
+    border-color: var(--accent);
+}
+
 .container {
     max-width: 1100px;
     margin: 0 auto;
