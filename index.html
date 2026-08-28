@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>游戏策划作品集 | AI原生/叙事方向</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- 花瓣背景 -->
+    <div class="petal-container" id="petalContainer"></div>
+
     <nav class="navbar">
         <div class="nav-brand">Portfolio</div>
         <ul class="nav-links">
@@ -146,9 +150,20 @@
             <h2>关于我</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p>2027届本科毕业生，求职方向：游戏系统策划（AI原生/叙事）。</p>
-                    <p>对AI驱动的游戏叙事设计有浓厚兴趣，具备Prompt Engineering实践经验和系统分析能力。熟悉主流大语言模型，能够编写结构化指令，掌握角色设定、上下文注入、输出格式约束等技巧。</p>
-                    <p>具备编程能力（Java等），了解基本游戏引擎。能够独立产出交互原型，正在深入学习Figma。</p>
+                    <div class="dialogue-box">
+                        <div class="speaker">>>> 系统提示</div>
+                        <div class="text">
+                            <p>2027届本科毕业生，求职方向：游戏系统策划（AI原生/叙事）。</p>
+                        </div>
+                    </div>
+
+                    <div class="dialogue-box">
+                        <div class="speaker">>>> 人物档案</div>
+                        <div class="text">
+                            <p>对AI驱动的游戏叙事设计有浓厚兴趣，具备Prompt Engineering实践经验和系统分析能力。熟悉主流大语言模型，能够编写结构化指令，掌握角色设定、上下文注入、输出格式约束等技巧。</p>
+                            <p>具备编程能力（Java等），了解基本游戏引擎。能够独立产出交互原型，熟悉Figma原型设计。</p>
+                        </div>
+                    </div>
                     
                     <div class="skills">
                         <h3>技能栈</h3>
@@ -200,5 +215,55 @@
             <p>© 2026 游戏策划作品集 | 求职方向：游戏系统策划实习生（AI原生/叙事）</p>
         </div>
     </footer>
+
+    <script>
+        // 花瓣飘落效果
+        function createPetal() {
+            const container = document.getElementById('petalContainer');
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            
+            // 随机大小
+            const size = Math.random() * 12 + 8;
+            petal.style.width = size + 'px';
+            petal.style.height = size + 'px';
+            
+            // 随机颜色（粉色系）
+            const colors = ['#F8BBD0', '#F48FB1', '#EC407A', '#E91E63', '#D81B60'];
+            petal.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            // 随机形状（圆形或花瓣形）
+            if (Math.random() > 0.5) {
+                petal.style.borderRadius = '50%';
+            } else {
+                petal.style.borderRadius = '50% 0 50% 0';
+            }
+            
+            // 随机位置
+            petal.style.left = Math.random() * 100 + '%';
+            
+            // 随机动画时长
+            const duration = Math.random() * 10 + 8;
+            petal.style.animationDuration = duration + 's';
+            
+            // 随机延迟
+            petal.style.animationDelay = Math.random() * 5 + 's';
+            
+            container.appendChild(petal);
+            
+            // 动画结束后移除
+            setTimeout(() => {
+                petal.remove();
+            }, (duration + 5) * 1000);
+        }
+        
+        // 每隔一段时间创建花瓣
+        setInterval(createPetal, 800);
+        
+        // 初始创建一些花瓣
+        for (let i = 0; i < 15; i++) {
+            setTimeout(createPetal, i * 200);
+        }
+    </script>
 </body>
 </html>

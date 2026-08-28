@@ -5,27 +5,72 @@
 }
 
 :root {
-    --primary: #8B4513;
-    --primary-light: #CD853F;
-    --accent: #DAA520;
-    --bg: #FDF5E6;
-    --bg-alt: #FAF0E6;
-    --text: #2C1810;
-    --text-light: #5C4033;
-    --border: #DEB887;
+    --primary: #9B59B6;
+    --primary-light: #AF7AC5;
+    --accent: #E91E63;
+    --accent-light: #F48FB1;
+    --bg: #FFF5F8;
+    --bg-alt: #FFF0F5;
+    --text: #4A4A4A;
+    --text-light: #7A7A7A;
+    --border: #F8BBD0;
+    --card-bg: rgba(255, 255, 255, 0.9);
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, .nav-brand {
+    font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+}
+
+/* 花瓣背景容器 */
+.petal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.petal {
+    position: absolute;
+    top: -50px;
+    opacity: 0.6;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-10vh) rotate(0deg) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(110vh) rotate(720deg) translateX(100px);
+        opacity: 0;
+    }
 }
 
 .container {
     max-width: 1100px;
     margin: 0 auto;
     padding: 0 24px;
+    position: relative;
+    z-index: 1;
 }
 
 /* Navbar */
@@ -34,7 +79,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 16px 40px;
-    background: rgba(253, 245, 230, 0.95);
+    background: rgba(255, 245, 248, 0.95);
     backdrop-filter: blur(10px);
     position: fixed;
     width: 100%;
@@ -61,10 +106,26 @@ body {
     color: var(--text-light);
     font-size: 0.95rem;
     transition: color 0.2s;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.3s;
 }
 
 .nav-links a:hover {
-    color: var(--primary);
+    color: var(--accent);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
 }
 
 /* Hero */
@@ -83,6 +144,7 @@ body {
     font-weight: 700;
     color: var(--primary);
     margin-bottom: 12px;
+    text-shadow: 2px 2px 4px rgba(155, 89, 182, 0.2);
 }
 
 .subtitle {
@@ -108,11 +170,19 @@ body {
 
 .tag {
     padding: 8px 20px;
-    background: var(--bg-alt);
-    border: 1px solid var(--border);
+    background: var(--card-bg);
+    border: 1px solid var(--accent-light);
     border-radius: 24px;
     font-size: 0.9rem;
-    color: var(--text-light);
+    color: var(--primary);
+    transition: all 0.3s;
+}
+
+.tag:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
 }
 
 /* Sections */
@@ -138,10 +208,11 @@ body {
 
 /* Project Showcase */
 .project-showcase {
-    background: white;
-    border-radius: 12px;
+    background: var(--card-bg);
+    border-radius: 16px;
     padding: 48px;
     border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(155, 89, 182, 0.1);
 }
 
 .project-info h3 {
@@ -185,28 +256,30 @@ body {
 
 .tech-tags span {
     padding: 6px 16px;
-    background: var(--bg);
-    border: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--bg) 0%, var(--bg-alt) 100%);
+    border: 1px solid var(--accent-light);
     border-radius: 6px;
     font-size: 0.85rem;
-    color: var(--text-light);
+    color: var(--primary);
 }
 
 .btn-primary {
     display: inline-block;
     padding: 12px 32px;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     color: white;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 24px;
     font-size: 1rem;
-    transition: background 0.2s;
+    transition: all 0.3s;
     margin-right: 16px;
     margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
 }
 
 .btn-primary:hover {
-    background: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
 }
 
 .btn-secondary {
@@ -215,16 +288,17 @@ body {
     background: transparent;
     color: var(--primary);
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 24px;
     font-size: 1rem;
     border: 1px solid var(--primary);
-    transition: all 0.2s;
+    transition: all 0.3s;
     margin-bottom: 8px;
 }
 
 .btn-secondary:hover {
     background: var(--primary);
     color: white;
+    transform: translateY(-2px);
 }
 
 /* Doc Grid */
@@ -235,15 +309,17 @@ body {
 }
 
 .doc-card {
-    background: white;
+    background: var(--card-bg);
     padding: 32px;
-    border-radius: 12px;
+    border-radius: 16px;
     border: 1px solid var(--border);
-    transition: transform 0.2s;
+    transition: all 0.3s;
 }
 
 .doc-card:hover {
     transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(155, 89, 182, 0.15);
+    border-color: var(--accent-light);
 }
 
 .doc-card h3 {
@@ -262,10 +338,11 @@ body {
     color: var(--accent);
     text-decoration: none;
     font-weight: 500;
+    transition: color 0.2s;
 }
 
 .btn-link:hover {
-    text-decoration: underline;
+    color: var(--primary);
 }
 
 /* Analysis */
@@ -277,10 +354,16 @@ body {
 }
 
 .analysis-item {
-    background: white;
+    background: var(--card-bg);
     padding: 24px;
-    border-radius: 8px;
+    border-radius: 12px;
     border: 1px solid var(--border);
+    transition: all 0.3s;
+}
+
+.analysis-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(155, 89, 182, 0.1);
 }
 
 .analysis-item h4 {
@@ -295,9 +378,9 @@ body {
 }
 
 .analysis-highlight {
-    background: white;
+    background: var(--card-bg);
     padding: 40px;
-    border-radius: 12px;
+    border-radius: 16px;
     border-left: 4px solid var(--accent);
     margin-bottom: 32px;
 }
@@ -320,11 +403,47 @@ blockquote {
     font-size: 0.9rem;
 }
 
-/* About */
+/* About - Galgame对话框风格 */
 .about-text p {
     color: var(--text-light);
     margin-bottom: 16px;
     font-size: 1.05rem;
+}
+
+.dialogue-box {
+    background: var(--card-bg);
+    border: 2px solid var(--accent-light);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(233, 30, 99, 0.1);
+}
+
+.dialogue-box::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 32px;
+    width: 16px;
+    height: 16px;
+    background: var(--bg);
+    border-top: 2px solid var(--accent-light);
+    border-left: 2px solid var(--accent-light);
+    transform: rotate(45deg);
+}
+
+.dialogue-box .speaker {
+    font-family: "Noto Serif SC", "Source Han Serif SC", serif;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+.dialogue-box .text {
+    color: var(--text);
+    line-height: 1.8;
 }
 
 .skills {
@@ -356,11 +475,52 @@ blockquote {
 
 .skill-group li {
     padding: 6px 16px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    background: var(--card-bg);
+    border: 1px solid var(--accent-light);
+    border-radius: 20px;
     font-size: 0.9rem;
+    color: var(--primary);
+    transition: all 0.2s;
+}
+
+.skill-group li:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Gaming Experience */
+.gaming-experience {
+    margin-top: 40px;
+}
+
+.gaming-experience h3 {
+    color: var(--primary);
+    margin-bottom: 16px;
+    font-size: 1.3rem;
+}
+
+.gaming-experience p {
     color: var(--text-light);
+    margin-bottom: 16px;
+}
+
+.gaming-experience ul {
+    list-style: none;
+}
+
+.gaming-experience li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-light);
+}
+
+.gaming-experience li:last-child {
+    border-bottom: none;
+}
+
+.gaming-experience strong {
+    color: var(--primary);
 }
 
 /* Footer */
@@ -372,7 +532,7 @@ footer {
     font-size: 0.9rem;
 }
 
-/* Responsive */
+/* 响应式 */
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;
@@ -401,6 +561,10 @@ footer {
     }
     
     .project-showcase {
+        padding: 24px;
+    }
+    
+    .dialogue-box {
         padding: 24px;
     }
 }
