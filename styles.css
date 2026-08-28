@@ -86,25 +86,17 @@ body {
     text-decoration: none;
 }
 
-.nav-seal {
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--gold);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: "Ma Shan Zheng", cursive;
-    font-size: 1rem;
-    color: var(--gold);
-    opacity: 0.55;
-    position: relative;
+.nav-brand-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    opacity: 0.6;
+    filter: brightness(0.9) contrast(1.1);
+    transition: opacity 0.3s;
 }
 
-.nav-seal::before {
-    content: '';
-    position: absolute;
-    inset: 2px;
-    border: 0.5px solid rgba(212,175,55,0.25);
+.nav-brand:hover .nav-brand-img {
+    opacity: 0.85;
 }
 
 .nav-brand-text {
@@ -1036,14 +1028,11 @@ footer {
     right: 32px;
     width: 44px;
     height: 44px;
-    border: 1.5px solid var(--red);
+    border: 1px solid var(--red);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: "Ma Shan Zheng", cursive;
-    font-size: 1.1rem;
-    color: var(--red);
-    opacity: 0.5;
+    opacity: 0.55;
     z-index: 50;
     background: rgba(10,10,10,0.9);
     text-decoration: none;
@@ -1052,7 +1041,14 @@ footer {
 }
 
 .seal-stamp:hover {
-    opacity: 0.8;
+    opacity: 0.85;
+}
+
+.seal-stamp-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    filter: brightness(0.85) contrast(1.1) sepia(0.15);
 }
 
 .seal-stamp::before {
@@ -1060,13 +1056,6 @@ footer {
     position: absolute;
     inset: 3px;
     border: 0.5px solid rgba(139,37,0,0.3);
-}
-
-.seal-stamp::after {
-    content: '';
-    position: absolute;
-    inset: 6px;
-    border: 0.5px solid rgba(139,37,0,0.15);
 }
 
 /* ===== 竖排装饰 ===== */
