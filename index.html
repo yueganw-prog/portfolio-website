@@ -229,30 +229,32 @@
             petal.className = 'petal';
             
             // 随机大小
-            const size = Math.random() * 12 + 8;
+            const size = Math.random() * 10 + 6;
             petal.style.width = size + 'px';
-            petal.style.height = size + 'px';
+            petal.style.height = size * 1.4 + 'px';
             
-            // 随机颜色（粉色系）
-            const colors = ['#F8BBD0', '#F48FB1', '#EC407A', '#E91E63', '#D81B60'];
-            petal.style.background = colors[Math.floor(Math.random() * colors.length)];
+            // 粉色渐变
+            const colors = ['#F8BBD0', '#F48FB1', '#EC407A'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            petal.style.background = `radial-gradient(ellipse at 30% 30%, white, ${color})`;
             
-            // 随机形状（圆形或花瓣形）
-            if (Math.random() > 0.5) {
-                petal.style.borderRadius = '50%';
-            } else {
-                petal.style.borderRadius = '50% 0 50% 0';
-            }
+            // 花瓣形状：椭圆 + 一侧尖
+            petal.style.borderRadius = '50% 0 50% 50%';
+            petal.style.transform = 'rotate(45deg)';
             
-            // 随机位置
+            // 随机水平位置
             petal.style.left = Math.random() * 100 + '%';
             
-            // 随机动画时长
-            const duration = Math.random() * 10 + 8;
+            // 随机动画时长（飘落速度）
+            const duration = Math.random() * 8 + 10;
             petal.style.animationDuration = duration + 's';
             
             // 随机延迟
-            petal.style.animationDelay = Math.random() * 5 + 's';
+            petal.style.animationDelay = Math.random() * 3 + 's';
+            
+            // 随机旋转角度
+            const rotation = Math.random() * 360;
+            petal.style.setProperty('--rotation', rotation + 'deg');
             
             container.appendChild(petal);
             
@@ -263,11 +265,11 @@
         }
         
         // 每隔一段时间创建花瓣
-        setInterval(createPetal, 800);
+        setInterval(createPetal, 1200);
         
         // 初始创建一些花瓣
-        for (let i = 0; i < 15; i++) {
-            setTimeout(createPetal, i * 200);
+        for (let i = 0; i < 10; i++) {
+            setTimeout(createPetal, i * 300);
         }
     </script>
 </body>
