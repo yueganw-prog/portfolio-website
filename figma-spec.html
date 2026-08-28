@@ -5,31 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Figma设计规范 | 凤谋</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         .spec-container { max-width: 900px; margin: 0 auto; padding: 80px 24px 60px; }
         .spec-header { margin-bottom: 32px; }
-        .spec-header h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 6px; }
+        .spec-header h1 { font-family: "Ma Shan Zheng", cursive; font-size: 2.2rem; color: var(--gold); margin-bottom: 6px; letter-spacing: 8px; }
         
-        .spec-section { background: white; border-radius: 12px; padding: 32px; margin-bottom: 20px; border: 1px solid var(--border); }
-        .spec-section h2 { font-size: 1.2rem; color: var(--primary); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
-        .spec-section h3 { font-size: 1rem; color: var(--text); margin: 16px 0 8px; }
-        .spec-section p { color: var(--text-light); margin-bottom: 10px; line-height: 1.7; }
+        .spec-section { background: rgba(17,17,17,0.8); border-radius: 0; padding: 32px; margin-bottom: 20px; border: 1px solid rgba(212,175,55,0.3); }
+        .spec-section h2 { font-family: "Ma Shan Zheng", cursive; font-size: 1.4rem; color: var(--gold); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(212,175,55,0.3); letter-spacing: 4px; }
+        .spec-section h3 { font-family: "Ma Shan Zheng", cursive; font-size: 1.1rem; color: var(--gold); margin: 16px 0 8px; letter-spacing: 2px; }
+        .spec-section p { color: var(--text-dim); margin-bottom: 10px; line-height: 1.8; }
         
-        .wireframe-placeholder { background: var(--bg); border: 2px dashed var(--border); border-radius: 8px; padding: 40px; text-align: center; margin: 16px 0; }
-        .wireframe-placeholder .label { color: var(--text-light); font-size: 0.9rem; }
-        .wireframe-placeholder .size { color: var(--primary); font-size: 0.8rem; margin-top: 4px; }
+        .wireframe-placeholder { background: rgba(212,175,55,0.03); border: 2px dashed rgba(212,175,55,0.3); border-radius: 0; padding: 40px; text-align: center; margin: 16px 0; }
+        .wireframe-placeholder .label { color: var(--text-dim); font-size: 0.9rem; }
+        .wireframe-placeholder .size { color: var(--gold); font-size: 0.8rem; margin-top: 4px; }
         
-        .flow-diagram { background: #f8f9fa; border-radius: 8px; padding: 24px; margin: 16px 0; font-family: monospace; font-size: 0.85rem; line-height: 1.6; color: var(--text); white-space: pre; overflow-x: auto; }
+        .flow-diagram { background: rgba(10,10,10,0.9); border-radius: 0; padding: 24px; margin: 16px 0; font-family: monospace; font-size: 0.85rem; line-height: 1.6; color: var(--text-dim); white-space: pre; overflow-x: auto; border: 1px solid rgba(42,42,42,0.5); }
         
         .color-palette { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
-        .color-swatch { width: 48px; height: 48px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .color-swatch { width: 48px; height: 48px; border-radius: 0; border: 1px solid rgba(212,175,55,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
         
         .component-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 12px 0; }
-        .component-item { background: var(--bg); padding: 14px; border-radius: 8px; border: 1px solid var(--border); }
-        .component-item .name { font-weight: 600; color: var(--text); font-size: 0.9rem; margin-bottom: 4px; }
-        .component-item .desc { color: var(--text-light); font-size: 0.8rem; }
+        .component-item { background: rgba(17,17,17,0.5); padding: 14px; border-radius: 0; border: 1px solid rgba(42,42,42,0.5); }
+        .component-item .name { font-family: "Ma Shan Zheng", cursive; font-weight: 400; color: var(--gold); font-size: 1rem; margin-bottom: 4px; letter-spacing: 2px; }
+        .component-item .desc { color: var(--text-dim); font-size: 0.8rem; }
         
-        .back-link { display: block; text-align: center; margin-top: 28px; color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+        .back-link { display: block; text-align: center; margin-top: 28px; color: var(--gold); text-decoration: none; font-size: 0.9rem; letter-spacing: 2px; transition: color 0.2s; }
+        .back-link:hover { color: var(--gold-light); }
     </style>
 </head>
 <body>

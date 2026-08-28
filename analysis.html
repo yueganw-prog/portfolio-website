@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>游戏叙事分析 | 崩坏：星穹铁道</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         .analysis-container {
             max-width: 900px;
@@ -17,45 +18,52 @@
         }
         
         .analysis-header h1 {
-            font-size: 2rem;
-            color: var(--primary);
+            font-family: "Ma Shan Zheng", cursive;
+            font-size: 2.5rem;
+            color: var(--gold);
             margin-bottom: 8px;
+            letter-spacing: 8px;
         }
         
         .analysis-meta {
             display: flex;
             gap: 24px;
-            color: var(--text-light);
+            color: var(--text-dim);
             font-size: 0.9rem;
             margin-top: 12px;
+            letter-spacing: 2px;
         }
         
         .analysis-section {
-            background: white;
-            border-radius: 12px;
+            background: rgba(17,17,17,0.8);
+            border-radius: 0;
             padding: 40px;
             margin-bottom: 32px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(212,175,55,0.3);
         }
         
         .analysis-section h2 {
-            font-size: 1.4rem;
-            color: var(--primary);
+            font-family: "Ma Shan Zheng", cursive;
+            font-size: 1.6rem;
+            color: var(--gold);
             margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 2px solid var(--border);
+            border-bottom: 1px solid rgba(212,175,55,0.3);
+            letter-spacing: 6px;
         }
         
         .analysis-section h3 {
-            font-size: 1.1rem;
-            color: var(--text);
+            font-family: "Ma Shan Zheng", cursive;
+            font-size: 1.2rem;
+            color: var(--gold);
             margin: 24px 0 12px;
+            letter-spacing: 4px;
         }
         
         .analysis-section p {
-            color: var(--text-light);
+            color: var(--text-dim);
             margin-bottom: 16px;
-            line-height: 1.8;
+            line-height: 2;
         }
         
         .analysis-section ul {
@@ -64,26 +72,28 @@
         }
         
         .analysis-section li {
-            color: var(--text-light);
+            color: var(--text-dim);
             margin-bottom: 8px;
-            line-height: 1.6;
+            line-height: 1.8;
         }
         
         .analysis-section li strong {
-            color: var(--text);
+            color: var(--gold);
         }
         
         .insight-box {
-            background: var(--bg);
-            border-left: 4px solid var(--accent);
+            background: rgba(212,175,55,0.03);
+            border-left: 2px solid var(--gold);
             padding: 24px;
             margin: 24px 0;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0;
         }
         
         .insight-box h4 {
-            color: var(--primary);
+            font-family: "Ma Shan Zheng", cursive;
+            color: var(--gold);
             margin-bottom: 8px;
+            letter-spacing: 4px;
         }
         
         .insight-box p {
@@ -97,17 +107,23 @@
         }
         
         .comparison-table th {
-            background: var(--bg);
-            color: var(--primary);
+            background: rgba(212,175,55,0.1);
+            color: var(--gold);
             padding: 12px;
             text-align: left;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(212,175,55,0.3);
+            font-family: "Ma Shan Zheng", cursive;
+            letter-spacing: 2px;
         }
         
         .comparison-table td {
             padding: 12px;
-            border: 1px solid var(--border);
-            color: var(--text-light);
+            border: 1px solid rgba(42,42,42,0.5);
+            color: var(--text-dim);
+        }
+        
+        .comparison-table tr:hover td {
+            background: rgba(212,175,55,0.03);
         }
         
         .system-diagram {

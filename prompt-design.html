@@ -5,37 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prompt设计文档 | 凤谋</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         .doc-container { max-width: 900px; margin: 0 auto; padding: 80px 24px 60px; }
         .doc-header { margin-bottom: 40px; }
-        .doc-header h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 6px; }
+        .doc-header h1 { font-family: "Ma Shan Zheng", cursive; font-size: 2.2rem; color: var(--gold); margin-bottom: 6px; letter-spacing: 8px; }
         
-        .doc-section { background: white; border-radius: 12px; padding: 36px; margin-bottom: 24px; border: 1px solid var(--border); }
-        .doc-section h2 { font-size: 1.3rem; color: var(--primary); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
-        .doc-section h3 { font-size: 1.05rem; color: var(--text); margin: 20px 0 10px; }
-        .doc-section p { color: var(--text-light); margin-bottom: 12px; line-height: 1.8; }
+        .doc-section { background: rgba(17,17,17,0.8); border-radius: 0; padding: 36px; margin-bottom: 24px; border: 1px solid rgba(212,175,55,0.3); }
+        .doc-section h2 { font-family: "Ma Shan Zheng", cursive; font-size: 1.5rem; color: var(--gold); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(212,175,55,0.3); letter-spacing: 6px; }
+        .doc-section h3 { font-family: "Ma Shan Zheng", cursive; font-size: 1.2rem; color: var(--gold); margin: 20px 0 10px; letter-spacing: 4px; }
+        .doc-section p { color: var(--text-dim); margin-bottom: 12px; line-height: 2; }
         
-        .code-block { background: #1a1a2e; color: #e0e0e0; padding: 18px; border-radius: 8px; font-family: 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.6; overflow-x: auto; margin: 14px 0; white-space: pre-wrap; }
+        .code-block { background: rgba(10,10,10,0.9); color: #e0e0e0; padding: 18px; border-radius: 0; font-family: 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.6; overflow-x: auto; margin: 14px 0; white-space: pre-wrap; border: 1px solid rgba(42,42,42,0.5); }
         .code-block .comment { color: #6a9955; }
         .code-block .keyword { color: #569cd6; }
         .code-block .string { color: #ce9178; }
         .code-block .variable { color: #4ec9b0; }
         
         .doc-list { margin: 14px 0; padding-left: 22px; }
-        .doc-list li { color: var(--text-light); margin-bottom: 6px; line-height: 1.6; }
-        .doc-list li strong { color: var(--text); }
+        .doc-list li { color: var(--text-dim); margin-bottom: 6px; line-height: 1.8; }
+        .doc-list li strong { color: var(--gold); }
         
-        .highlight-box { background: var(--bg); border-left: 4px solid var(--accent); padding: 18px; margin: 18px 0; border-radius: 0 8px 8px 0; }
+        .highlight-box { background: rgba(212,175,55,0.03); border-left: 2px solid var(--gold); padding: 18px; margin: 18px 0; border-radius: 0; }
         .highlight-box p { margin-bottom: 0; }
         
-        .char-card { background: var(--bg-alt); border-radius: 8px; padding: 20px; margin: 14px 0; border: 1px solid var(--border); }
-        .char-card h4 { color: var(--primary); margin-bottom: 10px; }
+        .char-card { background: rgba(17,17,17,0.5); border-radius: 0; padding: 20px; margin: 14px 0; border: 1px solid rgba(42,42,42,0.5); }
+        .char-card h4 { font-family: "Ma Shan Zheng", cursive; color: var(--gold); margin-bottom: 10px; letter-spacing: 4px; }
         
         .comparison-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-        .comparison-table th { background: var(--bg); color: var(--primary); padding: 10px; text-align: left; border: 1px solid var(--border); font-size: 0.9rem; }
-        .comparison-table td { padding: 10px; border: 1px solid var(--border); color: var(--text-light); font-size: 0.9rem; }
+        .comparison-table th { background: rgba(212,175,55,0.1); color: var(--gold); padding: 10px; text-align: left; border: 1px solid rgba(212,175,55,0.3); font-size: 0.9rem; letter-spacing: 2px; }
+        .comparison-table td { padding: 10px; border: 1px solid rgba(42,42,42,0.5); color: var(--text-dim); font-size: 0.9rem; }
         
-        .back-link { display: block; text-align: center; margin-top: 28px; color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+        .back-link { display: block; text-align: center; margin-top: 28px; color: var(--gold); text-decoration: none; font-size: 0.9rem; letter-spacing: 2px; transition: color 0.2s; }
+        .back-link:hover { color: var(--gold-light); }
     </style>
 </head>
 <body>

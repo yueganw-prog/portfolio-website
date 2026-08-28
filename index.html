@@ -5,47 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>游戏策划作品集 | AI原生/叙事方向</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- 水墨背景 -->
     <svg class="ink-bg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
         <defs>
-            <filter id="ink-turbulence">
-                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise"/>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="30"/>
-            </filter>
             <filter id="ink-blur">
-                <feGaussianBlur stdDeviation="20"/>
+                <feGaussianBlur stdDeviation="30"/>
             </filter>
             <radialGradient id="ink-grad1" cx="20%" cy="30%">
-                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.08"/>
+                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.06"/>
                 <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
             </radialGradient>
             <radialGradient id="ink-grad2" cx="80%" cy="70%">
-                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.03"/>
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.02"/>
+                <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="ink-grad3" cx="50%" cy="50%">
+                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.04"/>
                 <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
             </radialGradient>
         </defs>
         <!-- 水墨晕染层 -->
-        <ellipse cx="200" cy="300" rx="300" ry="200" fill="url(#ink-grad1)" filter="url(#ink-blur)"/>
-        <ellipse cx="1200" cy="600" rx="250" ry="180" fill="url(#ink-grad2)" filter="url(#ink-blur)"/>
+        <ellipse cx="200" cy="300" rx="400" ry="250" fill="url(#ink-grad1)" filter="url(#ink-blur)"/>
+        <ellipse cx="1200" cy="600" rx="350" ry="220" fill="url(#ink-grad2)" filter="url(#ink-blur)"/>
+        <ellipse cx="700" cy="450" rx="500" ry="300" fill="url(#ink-grad3)" filter="url(#ink-blur)"/>
         <!-- 抽象水墨笔触 -->
         <path d="M0,450 Q200,400 400,450 T800,420 T1200,460 T1440,430" 
-              stroke="rgba(212,175,55,0.03)" stroke-width="80" fill="none" filter="url(#ink-blur)"/>
+              stroke="rgba(212,175,55,0.02)" stroke-width="100" fill="none" filter="url(#ink-blur)"/>
         <path d="M0,500 Q300,480 600,520 T1000,490 T1440,510" 
-              stroke="rgba(255,255,255,0.02)" stroke-width="60" fill="none" filter="url(#ink-blur)"/>
+              stroke="rgba(255,255,255,0.015)" stroke-width="80" fill="none" filter="url(#ink-blur)"/>
     </svg>
 
     <nav class="navbar">
         <div class="nav-brand">弈</div>
         <ul class="nav-links">
             <li><a href="#home">首页</a></li>
-            <li><a href="#ai-demo">AI互动叙事</a></li>
-            <li><a href="prompt-debugger.html">Prompt调试器</a></li>
-            <li><a href="wireframes.html">交互原型</a></li>
-            <li><a href="prompt-design.html">设计文档</a></li>
-            <li><a href="#analysis">游戏分析</a></li>
+            <li><a href="#ai-demo">作品一</a></li>
+            <li><a href="#prompt-doc">作品二</a></li>
+            <li><a href="#analysis">作品三</a></li>
             <li><a href="#about">关于我</a></li>
         </ul>
     </nav>
@@ -245,5 +244,8 @@
             <p>© 2026 游戏策划作品集</p>
         </div>
     </footer>
+
+    <!-- 印章装饰 -->
+    <div class="seal-stamp">弈</div>
 </body>
 </html>

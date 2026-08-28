@@ -5,70 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>凤谋 | AI互动叙事Demo v2</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         .demo-container { max-width: 900px; margin: 0 auto; padding: 80px 24px 60px; min-height: 100vh; }
         .demo-header { text-align: center; margin-bottom: 32px; }
-        .demo-header h1 { font-size: 2.5rem; color: var(--primary); margin-bottom: 4px; }
-        .demo-header p { color: var(--text-light); font-size: 0.95rem; }
+        .demo-header h1 { font-family: "Ma Shan Zheng", cursive; font-size: 3rem; color: var(--gold); margin-bottom: 4px; letter-spacing: 8px; }
+        .demo-header p { color: var(--text-dim); font-size: 0.95rem; letter-spacing: 2px; }
         
         .game-layout { display: grid; grid-template-columns: 1fr 240px; gap: 20px; }
         @media (max-width: 768px) { .game-layout { grid-template-columns: 1fr; } }
         
-        .game-area { background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
-        .story-header { background: var(--primary); color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .story-header h3 { font-size: 1.05rem; }
-        .story-status { font-size: 0.85rem; opacity: 0.9; }
-        .story-content { padding: 28px 20px; min-height: 280px; max-height: 500px; overflow-y: auto; }
+        .game-area { background: rgba(17,17,17,0.9); border-radius: 0; border: 1px solid rgba(212,175,55,0.3); overflow: hidden; }
+        .story-header { background: rgba(212,175,55,0.1); color: var(--gold); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212,175,55,0.2); }
+        .story-header h3 { font-family: "Ma Shan Zheng", cursive; font-size: 1.2rem; letter-spacing: 4px; }
+        .story-status { font-size: 0.85rem; opacity: 0.8; }
+        .story-content { padding: 28px 20px; min-height: 280px; max-height: 500px; overflow-y: auto; color: var(--text-dim); }
         
-        .narrator { color: var(--text-light); font-style: italic; margin-bottom: 16px; line-height: 1.8; padding: 14px; background: var(--bg); border-radius: 8px; font-size: 0.95rem; }
+        .narrator { color: var(--text-dim); font-style: italic; margin-bottom: 16px; line-height: 1.8; padding: 14px; background: rgba(212,175,55,0.03); border-radius: 0; font-size: 0.95rem; border-left: 2px solid rgba(212,175,55,0.3); }
         
-        .dialogue { margin-bottom: 12px; padding: 14px; border-radius: 8px; }
-        .dialogue.emperor { background: #FFF8E7; border-left: 3px solid var(--accent); }
-        .dialogue.player { background: #F0F8FF; border-left: 3px solid #4A90D9; }
-        .dialogue.npc { background: #F5F0FF; border-left: 3px solid #9B59B6; }
+        .dialogue { margin-bottom: 12px; padding: 14px; border-radius: 0; background: rgba(17,17,17,0.5); border-left: 2px solid rgba(212,175,55,0.3); }
+        .dialogue.emperor { border-left-color: var(--gold); }
+        .dialogue.player { border-left-color: #4A90D9; }
+        .dialogue.npc { border-left-color: #9B59B6; }
         .dialogue.ai-tag { position: relative; }
-        .dialogue.ai-tag::after { content: 'AI生成'; position: absolute; top: 8px; right: 8px; font-size: 0.7rem; background: #E8F5E9; color: #2E7D32; padding: 2px 6px; border-radius: 4px; font-style: normal; }
-        .dialogue-name { font-weight: 600; margin-bottom: 4px; font-size: 0.85rem; }
-        .dialogue.emperor .dialogue-name { color: var(--accent); }
+        .dialogue.ai-tag::after { content: 'AI生成'; position: absolute; top: 8px; right: 8px; font-size: 0.7rem; background: rgba(212,175,55,0.1); color: var(--gold); padding: 2px 6px; border-radius: 0; font-style: normal; border: 1px solid rgba(212,175,55,0.3); }
+        .dialogue-name { font-family: "Ma Shan Zheng", cursive; font-weight: 400; margin-bottom: 4px; font-size: 1rem; letter-spacing: 2px; }
+        .dialogue.emperor .dialogue-name { color: var(--gold); }
         .dialogue.player .dialogue-name { color: #4A90D9; }
         .dialogue.npc .dialogue-name { color: #9B59B6; }
-        .dialogue-text { color: var(--text); line-height: 1.7; font-size: 0.95rem; }
+        .dialogue-text { color: var(--text-dim); line-height: 1.8; font-size: 0.95rem; }
         
-        .choices { padding: 20px; background: var(--bg-alt); border-top: 1px solid var(--border); }
-        .choices h4 { color: var(--text-light); font-size: 0.85rem; margin-bottom: 12px; }
-        .choice-btn { display: block; width: 100%; padding: 12px 16px; margin-bottom: 8px; background: white; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; text-align: left; font-size: 0.9rem; color: var(--text); transition: all 0.2s; }
-        .choice-btn:hover { border-color: var(--primary); background: var(--bg); }
+        .choices { padding: 20px; background: rgba(10,10,10,0.8); border-top: 1px solid rgba(212,175,55,0.2); }
+        .choices h4 { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 12px; letter-spacing: 2px; }
+        .choice-btn { display: block; width: 100%; padding: 12px 16px; margin-bottom: 8px; background: rgba(17,17,17,0.5); border: 1px solid rgba(42,42,42,0.5); border-radius: 0; cursor: pointer; text-align: left; font-size: 0.9rem; color: var(--text-dim); transition: all 0.2s; letter-spacing: 1px; }
+        .choice-btn:hover { border-color: var(--gold); background: rgba(212,175,55,0.05); color: var(--gold); }
         .choice-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .choice-btn.locked { background: #f5f5f5; border-style: dashed; color: #999; }
+        .choice-btn.locked { background: rgba(17,17,17,0.3); border-style: dashed; color: #666; }
         .choice-btn .lock-hint { font-size: 0.75rem; color: #e74c3c; margin-top: 4px; }
         .choice-btn:last-child { margin-bottom: 0; }
         
-        .restart-btn { display: inline-block; padding: 12px 32px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+        .restart-btn { display: inline-block; padding: 12px 32px; background: var(--gold); color: var(--black); border: none; border-radius: 0; cursor: pointer; font-size: 1rem; letter-spacing: 3px; transition: all 0.3s; }
+        .restart-btn:hover { background: var(--gold-light); box-shadow: 0 0 30px rgba(212,175,55,0.4); }
         
-        .state-panel { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 20px; position: sticky; top: 80px; }
-        .state-panel h3 { font-size: 1rem; color: var(--primary); margin-bottom: 16px; }
+        .state-panel { background: rgba(17,17,17,0.9); border-radius: 0; border: 1px solid rgba(212,175,55,0.3); padding: 20px; position: sticky; top: 80px; }
+        .state-panel h3 { font-family: "Ma Shan Zheng", cursive; font-size: 1.1rem; color: var(--gold); margin-bottom: 16px; letter-spacing: 4px; }
         .state-item { margin-bottom: 14px; }
-        .state-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-light); margin-bottom: 4px; }
-        .state-bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
-        .state-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
-        .state-fill.reputation { background: linear-gradient(90deg, #FFD700, #FFA000); }
+        .state-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 4px; }
+        .state-bar { height: 6px; background: rgba(42,42,42,0.5); border-radius: 0; overflow: hidden; }
+        .state-fill { height: 100%; border-radius: 0; transition: width 0.5s ease; }
+        .state-fill.reputation { background: linear-gradient(90deg, #d4af37, #8b7500); }
         .state-fill.favor { background: linear-gradient(90deg, #FF6B6B, #EE5A24); }
         .state-fill.wisdom { background: linear-gradient(90deg, #4ECDC4, #2C3E50); }
         .state-fill.cunning { background: linear-gradient(90deg, #A29BFE, #6C5CE7); }
         
-        .state-panel .chapter-info { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
-        .state-panel .chapter-info h4 { font-size: 0.85rem; color: var(--text-light); margin-bottom: 8px; }
-        .state-panel .chapter-info p { font-size: 0.8rem; color: var(--text-light); line-height: 1.5; }
+        .state-panel .chapter-info { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(42,42,42,0.5); }
+        .state-panel .chapter-info h4 { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 8px; letter-spacing: 2px; }
+        .state-panel .chapter-info p { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
         
-        .back-link { display: block; text-align: center; margin-top: 24px; color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+        .back-link { display: block; text-align: center; margin-top: 24px; color: var(--gold); text-decoration: none; font-size: 0.9rem; letter-spacing: 2px; transition: color 0.2s; }
+        .back-link:hover { color: var(--gold-light); }
         
         .game-over { text-align: center; padding: 48px 24px; }
-        .game-over h2 { color: var(--primary); margin-bottom: 16px; }
-        .game-over p { color: var(--text-light); margin-bottom: 24px; line-height: 1.8; }
+        .game-over h2 { font-family: "Ma Shan Zheng", cursive; color: var(--gold); margin-bottom: 16px; font-size: 2rem; letter-spacing: 8px; }
+        .game-over p { color: var(--text-dim); margin-bottom: 24px; line-height: 1.8; }
         .ending-stats { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
-        .ending-stat { padding: 12px 20px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); }
-        .ending-stat .label { font-size: 0.8rem; color: var(--text-light); }
-        .ending-stat .value { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+        .ending-stat { padding: 12px 20px; background: rgba(17,17,17,0.5); border-radius: 0; border: 1px solid rgba(212,175,55,0.3); }
+        .ending-stat .label { font-size: 0.8rem; color: var(--text-dim); }
+        .ending-stat .value { font-size: 1.4rem; font-weight: 700; color: var(--gold); }
     </style>
 </head>
 <body>
