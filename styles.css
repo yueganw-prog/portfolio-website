@@ -5,24 +5,26 @@
 }
 
 :root {
-    --ink: #1a1a1a;
-    --ink-light: #3a3a3a;
-    --ink-faint: #6a6a6a;
-    --paper: #f5f0e8;
-    --paper-dark: #e8e0d0;
-    --accent: #8b0000;
-    --border: #d0c8b8;
+    --black: #0a0a0a;
+    --black-light: #1a1a1a;
+    --gold: #d4af37;
+    --gold-dim: #8b7500;
+    --gold-light: #f4d03f;
+    --ink: rgba(255,255,255,0.03);
+    --text: #e8e8e8;
+    --text-dim: #888;
+    --border: #2a2a2a;
 }
 
 body {
-    font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", "SimSun", serif;
-    background: var(--paper);
-    color: var(--ink);
+    font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+    background: var(--black);
+    color: var(--text);
     line-height: 1.8;
     overflow-x: hidden;
 }
 
-/* 水墨背景纹理 */
+/* 水墨纹理背景 */
 body::before {
     content: '';
     position: fixed;
@@ -31,14 +33,15 @@ body::before {
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(ellipse at 20% 80%, rgba(0,0,0,0.03) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(0,0,0,0.02) 0%, transparent 50%);
+        radial-gradient(ellipse at 15% 50%, rgba(255,255,255,0.02) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 30%, rgba(212,175,55,0.02) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 80%, rgba(255,255,255,0.01) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 40px;
     position: relative;
@@ -51,19 +54,19 @@ body::before {
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px;
-    background: rgba(245, 240, 232, 0.95);
+    background: rgba(10, 10, 10, 0.95);
     backdrop-filter: blur(10px);
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 100;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--gold-dim);
 }
 
 .nav-brand {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    color: var(--ink);
+    color: var(--gold);
     letter-spacing: 8px;
 }
 
@@ -75,14 +78,14 @@ body::before {
 
 .nav-links a {
     text-decoration: none;
-    color: var(--ink-faint);
+    color: var(--text-dim);
     font-size: 0.9rem;
     transition: color 0.3s;
     letter-spacing: 2px;
 }
 
 .nav-links a:hover {
-    color: var(--ink);
+    color: var(--gold);
 }
 
 /* Hero */
@@ -96,39 +99,45 @@ body::before {
     position: relative;
 }
 
-.hero::after {
+/* 水墨晕染装饰 */
+.hero::before {
     content: '';
     position: absolute;
-    bottom: 0;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    width: 1px;
-    height: 80px;
-    background: linear-gradient(to bottom, transparent, var(--ink-faint), transparent);
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(212,175,55,0.03) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
 }
 
 .hero h1 {
-    font-size: 2.8rem;
+    font-size: 3rem;
     font-weight: 400;
-    color: var(--ink);
+    color: var(--gold);
     margin-bottom: 16px;
-    letter-spacing: 12px;
+    letter-spacing: 16px;
+    text-shadow: 0 0 40px rgba(212,175,55,0.2);
 }
 
 .subtitle {
     font-size: 1.1rem;
-    color: var(--ink-faint);
-    margin-bottom: 32px;
-    letter-spacing: 6px;
-    font-weight: 400;
+    color: var(--text-dim);
+    margin-bottom: 40px;
+    letter-spacing: 8px;
+    font-weight: 300;
 }
 
 .desc {
     font-size: 1rem;
-    color: var(--ink-light);
+    color: var(--text-dim);
     max-width: 500px;
-    margin: 0 auto 40px;
+    margin: 0 auto 48px;
     line-height: 2;
+    letter-spacing: 1px;
 }
 
 .hero-tags {
@@ -139,100 +148,117 @@ body::before {
 }
 
 .tag {
-    padding: 6px 16px;
-    background: transparent;
-    border: 1px solid var(--border);
+    padding: 8px 20px;
+    border: 1px solid var(--gold-dim);
     font-size: 0.85rem;
-    color: var(--ink-faint);
+    color: var(--gold);
     letter-spacing: 2px;
+    transition: all 0.3s;
+}
+
+.tag:hover {
+    background: var(--gold);
+    color: var(--black);
+}
+
+/* 金色分隔线 */
+.gold-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 24px 0 40px;
+    gap: 12px;
+}
+
+.gold-divider::before,
+.gold-divider::after {
+    content: '';
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+}
+
+.gold-divider span {
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 4px;
 }
 
 /* 板块 */
 .section {
-    padding: 80px 0;
+    padding: 100px 0;
 }
 
 .section-alt {
-    background: var(--paper-dark);
+    background: var(--black-light);
 }
 
 .section h2 {
-    font-size: 1.6rem;
-    color: var(--ink);
+    font-size: 1.4rem;
+    color: var(--gold);
     margin-bottom: 8px;
-    letter-spacing: 6px;
+    letter-spacing: 8px;
     font-weight: 400;
     text-align: center;
 }
 
 .section-desc {
-    color: var(--ink-faint);
+    color: var(--text-dim);
     font-size: 0.95rem;
     margin-bottom: 48px;
     text-align: center;
     letter-spacing: 2px;
 }
 
-/* 水墨分隔线 */
-.ink-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 24px 0 40px;
-}
-
-.ink-divider::before,
-.ink-divider::after {
-    content: '';
-    width: 60px;
-    height: 1px;
-    background: var(--ink-faint);
-}
-
-.ink-divider span {
-    margin: 0 16px;
-    color: var(--ink-faint);
-    font-size: 0.8rem;
-}
-
 /* 作品展示 */
 .project-showcase {
-    background: var(--paper);
-    border: 1px solid var(--border);
+    background: var(--black-light);
+    border: 1px solid var(--gold-dim);
     padding: 48px;
     position: relative;
 }
 
-.project-showcase::before {
+/* 角落装饰 */
+.project-showcase::before,
+.project-showcase::after {
     content: '';
     position: absolute;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--gold);
+}
+
+.project-showcase::before {
     top: -1px;
     left: -1px;
-    right: -1px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.project-showcase::after {
     bottom: -1px;
-    border: 1px solid var(--ink);
-    transform: translate(4px, 4px);
-    z-index: -1;
-    opacity: 0.1;
+    right: -1px;
+    border-left: none;
+    border-top: none;
 }
 
 .project-info h3 {
-    font-size: 1.2rem;
-    color: var(--ink);
+    font-size: 1.1rem;
+    color: var(--gold);
     margin-bottom: 16px;
     letter-spacing: 4px;
     font-weight: 400;
 }
 
 .project-info p {
-    color: var(--ink-light);
+    color: var(--text-dim);
     margin-bottom: 24px;
     line-height: 2;
 }
 
 .features h4, .tech-stack h4 {
-    font-size: 1rem;
-    color: var(--ink);
+    font-size: 0.95rem;
+    color: var(--gold);
     margin-bottom: 12px;
     letter-spacing: 2px;
     font-weight: 400;
@@ -245,7 +271,7 @@ body::before {
 
 .features li {
     padding: 8px 0;
-    color: var(--ink-light);
+    color: var(--text-dim);
     border-bottom: 1px solid var(--border);
     line-height: 1.8;
 }
@@ -263,17 +289,17 @@ body::before {
 
 .tech-tags span {
     padding: 4px 12px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--gold-dim);
     font-size: 0.8rem;
-    color: var(--ink-faint);
+    color: var(--gold);
     letter-spacing: 1px;
 }
 
 .btn-primary {
     display: inline-block;
-    padding: 10px 24px;
-    background: var(--ink);
-    color: var(--paper);
+    padding: 12px 28px;
+    background: var(--gold);
+    color: var(--black);
     text-decoration: none;
     font-size: 0.9rem;
     transition: all 0.3s;
@@ -283,25 +309,26 @@ body::before {
 }
 
 .btn-primary:hover {
-    background: var(--ink-light);
+    background: var(--gold-light);
+    box-shadow: 0 0 20px rgba(212,175,55,0.3);
 }
 
 .btn-secondary {
     display: inline-block;
-    padding: 10px 24px;
+    padding: 12px 28px;
     background: transparent;
-    color: var(--ink);
+    color: var(--gold);
     text-decoration: none;
     font-size: 0.9rem;
-    border: 1px solid var(--ink);
+    border: 1px solid var(--gold);
     transition: all 0.3s;
     margin-bottom: 8px;
     letter-spacing: 2px;
 }
 
 .btn-secondary:hover {
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--gold);
+    color: var(--black);
 }
 
 /* 文档卡片 */
@@ -312,33 +339,33 @@ body::before {
 }
 
 .doc-card {
-    background: var(--paper);
+    background: var(--black-light);
     padding: 32px;
     border: 1px solid var(--border);
     transition: all 0.3s;
 }
 
 .doc-card:hover {
-    border-color: var(--ink-faint);
+    border-color: var(--gold-dim);
 }
 
 .doc-card h3 {
-    font-size: 1.1rem;
-    color: var(--ink);
+    font-size: 1rem;
+    color: var(--gold);
     margin-bottom: 12px;
     letter-spacing: 2px;
     font-weight: 400;
 }
 
 .doc-card p {
-    color: var(--ink-light);
+    color: var(--text-dim);
     margin-bottom: 16px;
     font-size: 0.9rem;
     line-height: 1.8;
 }
 
 .btn-link {
-    color: var(--ink-faint);
+    color: var(--gold-dim);
     text-decoration: none;
     font-size: 0.85rem;
     letter-spacing: 1px;
@@ -346,7 +373,7 @@ body::before {
 }
 
 .btn-link:hover {
-    color: var(--ink);
+    color: var(--gold);
 }
 
 /* 分析 */
@@ -358,64 +385,64 @@ body::before {
 }
 
 .analysis-item {
-    background: var(--paper);
+    background: var(--black-light);
     padding: 20px;
     border: 1px solid var(--border);
 }
 
 .analysis-item h4 {
-    color: var(--ink);
+    color: var(--gold);
     margin-bottom: 8px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     letter-spacing: 2px;
     font-weight: 400;
 }
 
 .analysis-item p {
-    color: var(--ink-light);
+    color: var(--text-dim);
     font-size: 0.85rem;
     line-height: 1.6;
 }
 
 .analysis-highlight {
-    background: var(--paper);
+    background: var(--black-light);
     padding: 40px;
-    border-left: 2px solid var(--ink);
+    border-left: 2px solid var(--gold);
     margin-bottom: 32px;
 }
 
 .analysis-highlight h3 {
-    color: var(--ink);
+    color: var(--gold);
     margin-bottom: 16px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     letter-spacing: 2px;
     font-weight: 400;
 }
 
 blockquote {
-    font-size: 1rem;
-    color: var(--ink-light);
+    font-size: 0.95rem;
+    color: var(--text-dim);
     margin-bottom: 12px;
     line-height: 2;
     padding-left: 16px;
-    border-left: 1px solid var(--border);
+    border-left: 1px solid var(--gold-dim);
 }
 
 .analysis-highlight p {
-    color: var(--ink-faint);
+    color: var(--text-dim);
     font-size: 0.85rem;
 }
 
-/* 关于我 - 卷轴风格 */
+/* 关于我 */
 .about-text p {
-    color: var(--ink-light);
+    color: var(--text-dim);
     margin-bottom: 16px;
     font-size: 1rem;
     line-height: 2;
 }
 
 .dialogue-box {
-    background: var(--paper);
+    background: var(--black-light);
     border: 1px solid var(--border);
     padding: 32px;
     margin-bottom: 24px;
@@ -429,12 +456,12 @@ blockquote {
     left: 0;
     width: 3px;
     height: 100%;
-    background: var(--ink);
-    opacity: 0.2;
+    background: var(--gold);
+    opacity: 0.5;
 }
 
 .dialogue-box .speaker {
-    color: var(--ink);
+    color: var(--gold);
     font-weight: 600;
     margin-bottom: 12px;
     font-size: 1rem;
@@ -442,7 +469,7 @@ blockquote {
 }
 
 .dialogue-box .text {
-    color: var(--ink-light);
+    color: var(--text-dim);
     line-height: 2;
 }
 
@@ -451,9 +478,9 @@ blockquote {
 }
 
 .skills h3 {
-    color: var(--ink);
+    color: var(--gold);
     margin-bottom: 24px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     letter-spacing: 4px;
     font-weight: 400;
 }
@@ -463,9 +490,9 @@ blockquote {
 }
 
 .skill-group h4 {
-    color: var(--ink);
+    color: var(--gold);
     margin-bottom: 12px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     letter-spacing: 2px;
     font-weight: 400;
 }
@@ -481,13 +508,14 @@ blockquote {
     padding: 4px 12px;
     border: 1px solid var(--border);
     font-size: 0.85rem;
-    color: var(--ink-faint);
+    color: var(--text-dim);
     letter-spacing: 1px;
+    transition: all 0.2s;
 }
 
 .skill-group li:hover {
-    border-color: var(--ink);
-    color: var(--ink);
+    border-color: var(--gold);
+    color: var(--gold);
 }
 
 /* 游戏经历 */
@@ -496,15 +524,15 @@ blockquote {
 }
 
 .gaming-experience h3 {
-    color: var(--ink);
+    color: var(--gold);
     margin-bottom: 16px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     letter-spacing: 4px;
     font-weight: 400;
 }
 
 .gaming-experience p {
-    color: var(--ink-light);
+    color: var(--text-dim);
     margin-bottom: 16px;
     line-height: 1.8;
 }
@@ -516,7 +544,7 @@ blockquote {
 .gaming-experience li {
     padding: 12px 0;
     border-bottom: 1px solid var(--border);
-    color: var(--ink-light);
+    color: var(--text-dim);
     line-height: 1.8;
 }
 
@@ -525,15 +553,15 @@ blockquote {
 }
 
 .gaming-experience strong {
-    color: var(--ink);
+    color: var(--gold);
 }
 
 /* 页脚 */
 footer {
     padding: 40px 0;
     text-align: center;
-    border-top: 1px solid var(--border);
-    color: var(--ink-faint);
+    border-top: 1px solid var(--gold-dim);
+    color: var(--text-dim);
     font-size: 0.85rem;
     letter-spacing: 2px;
 }
