@@ -48,7 +48,30 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.3;
+    opacity: 0.5;
+}
+
+/* 飘落粒子 */
+.particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 板块装饰线 */
+.section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, rgba(212,175,55,0.3), transparent);
 }
 
 /* 导航 */

@@ -14,29 +14,46 @@
             <filter id="ink-blur">
                 <feGaussianBlur stdDeviation="30"/>
             </filter>
-            <radialGradient id="ink-grad1" cx="20%" cy="30%">
-                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.06"/>
+            <filter id="ink-blur-light">
+                <feGaussianBlur stdDeviation="15"/>
+            </filter>
+            <radialGradient id="ink-grad1" cx="15%" cy="25%">
+                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.08"/>
                 <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
             </radialGradient>
-            <radialGradient id="ink-grad2" cx="80%" cy="70%">
-                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.02"/>
+            <radialGradient id="ink-grad2" cx="85%" cy="75%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.03"/>
                 <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
             </radialGradient>
-            <radialGradient id="ink-grad3" cx="50%" cy="50%">
-                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.04"/>
+            <radialGradient id="ink-grad3" cx="50%" cy="40%">
+                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.05"/>
                 <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
             </radialGradient>
         </defs>
         <!-- 水墨晕染层 -->
-        <ellipse cx="200" cy="300" rx="400" ry="250" fill="url(#ink-grad1)" filter="url(#ink-blur)"/>
-        <ellipse cx="1200" cy="600" rx="350" ry="220" fill="url(#ink-grad2)" filter="url(#ink-blur)"/>
-        <ellipse cx="700" cy="450" rx="500" ry="300" fill="url(#ink-grad3)" filter="url(#ink-blur)"/>
+        <ellipse cx="150" cy="200" rx="450" ry="280" fill="url(#ink-grad1)" filter="url(#ink-blur)"/>
+        <ellipse cx="1300" cy="650" rx="400" ry="250" fill="url(#ink-grad2)" filter="url(#ink-blur)"/>
+        <ellipse cx="700" cy="400" rx="600" ry="350" fill="url(#ink-grad3)" filter="url(#ink-blur)"/>
+        <!-- 远山剪影 -->
+        <path d="M0,750 Q100,680 200,720 T400,690 T550,730 T700,680 T850,720 T1000,700 T1150,740 T1300,690 T1440,710 L1440,900 L0,900 Z" 
+              fill="rgba(212,175,55,0.02)" filter="url(#ink-blur)"/>
+        <path d="M0,800 Q150,740 300,780 T500,750 T650,790 T850,740 T1050,770 T1200,750 T1440,780 L1440,900 L0,900 Z" 
+              fill="rgba(255,255,255,0.015)" filter="url(#ink-blur)"/>
+        <!-- 云纹 -->
+        <g opacity="0.04" filter="url(#ink-blur-light)">
+            <path d="M100,150 Q130,120 160,150 Q190,120 220,150 Q190,180 160,150" fill="#d4af37"/>
+            <path d="M1200,200 Q1230,170 1260,200 Q1290,170 1320,200 Q1290,230 1260,200" fill="#d4af37"/>
+            <path d="M600,100 Q630,70 660,100 Q690,70 720,100 Q690,130 660,100" fill="#ffffff"/>
+        </g>
         <!-- 抽象水墨笔触 -->
         <path d="M0,450 Q200,400 400,450 T800,420 T1200,460 T1440,430" 
-              stroke="rgba(212,175,55,0.02)" stroke-width="100" fill="none" filter="url(#ink-blur)"/>
+              stroke="rgba(212,175,55,0.025)" stroke-width="120" fill="none" filter="url(#ink-blur)"/>
         <path d="M0,500 Q300,480 600,520 T1000,490 T1440,510" 
-              stroke="rgba(255,255,255,0.015)" stroke-width="80" fill="none" filter="url(#ink-blur)"/>
+              stroke="rgba(255,255,255,0.02)" stroke-width="100" fill="none" filter="url(#ink-blur)"/>
     </svg>
+
+    <!-- 飘落粒子 -->
+    <canvas id="particles" class="particles-canvas"></canvas>
 
     <nav class="navbar">
         <div class="nav-brand">弈</div>
@@ -249,5 +266,61 @@
 
     <!-- 印章装饰 -->
     <div class="seal-stamp">弈</div>
+
+    <!-- 飘落粒子脚本 -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('particles');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const count = 30;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 2 + 0.5,
+                speedY: Math.random() * 0.3 + 0.1,
+                speedX: Math.random() * 0.2 - 0.1,
+                opacity: Math.random() * 0.3 + 0.1,
+                color: Math.random() > 0.5 ? '#d4af37' : '#ffffff'
+            };
+        }
+
+        for (let i = 0; i < count; i++) {
+            const p = createParticle();
+            p.y = Math.random() * canvas.height;
+            particles.push(p);
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.opacity;
+                ctx.fill();
+                p.y += p.speedY;
+                p.x += p.speedX;
+                if (p.y > canvas.height) {
+                    p.y = -10;
+                    p.x = Math.random() * canvas.width;
+                }
+            });
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animate);
+        }
+        animate();
+    })();
+    </script>
 </body>
 </html>
