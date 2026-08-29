@@ -8,15 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 水墨背景 -->
     <svg class="ink-bg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
         <defs>
-            <filter id="ink-blur">
-                <feGaussianBlur stdDeviation="30"/>
-            </filter>
-            <filter id="ink-blur-light">
-                <feGaussianBlur stdDeviation="15"/>
-            </filter>
+            <filter id="ink-blur"><feGaussianBlur stdDeviation="30"/></filter>
+            <filter id="ink-blur-light"><feGaussianBlur stdDeviation="15"/></filter>
             <radialGradient id="ink-grad1" cx="15%" cy="25%">
                 <stop offset="0%" stop-color="#d4af37" stop-opacity="0.06"/>
                 <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
@@ -33,21 +28,17 @@
         <ellipse cx="150" cy="200" rx="450" ry="280" fill="url(#ink-grad1)" filter="url(#ink-blur)"/>
         <ellipse cx="1300" cy="650" rx="400" ry="250" fill="url(#ink-grad2)" filter="url(#ink-blur)"/>
         <ellipse cx="700" cy="400" rx="600" ry="350" fill="url(#ink-grad3)" filter="url(#ink-blur)"/>
-        <path d="M0,750 Q100,680 200,720 T400,690 T550,730 T700,680 T850,720 T1000,700 T1150,740 T1300,690 T1440,710 L1440,900 L0,900 Z" 
-              fill="rgba(212,175,55,0.015)" filter="url(#ink-blur)"/>
-        <path d="M0,800 Q150,740 300,780 T500,750 T650,790 T850,740 T1050,770 T1200,750 T1440,780 L1440,900 L0,900 Z" 
-              fill="rgba(255,255,255,0.01)" filter="url(#ink-blur)"/>
+        <path d="M0,750 Q100,680 200,720 T400,690 T550,730 T700,680 T850,720 T1000,700 T1150,740 T1300,690 T1440,710 L1440,900 L0,900 Z" fill="rgba(212,175,55,0.015)" filter="url(#ink-blur)"/>
+        <path d="M0,800 Q150,740 300,780 T500,750 T650,790 T850,740 T1050,770 T1200,750 T1440,780 L1440,900 L0,900 Z" fill="rgba(255,255,255,0.01)" filter="url(#ink-blur)"/>
         <g opacity="0.03" filter="url(#ink-blur-light)">
             <path d="M100,150 Q130,120 160,150 Q190,120 220,150 Q190,180 160,150" fill="#d4af37"/>
             <path d="M1200,200 Q1230,170 1260,200 Q1290,170 1320,200 Q1290,230 1260,200" fill="#d4af37"/>
         </g>
-        <path d="M0,450 Q200,400 400,450 T800,420 T1200,460 T1440,430" 
-              stroke="rgba(212,175,55,0.02)" stroke-width="100" fill="none" filter="url(#ink-blur)"/>
+        <path d="M0,450 Q200,400 400,450 T800,420 T1200,460 T1440,430" stroke="rgba(212,175,55,0.02)" stroke-width="100" fill="none" filter="url(#ink-blur)"/>
     </svg>
 
     <canvas id="particles" class="particles-canvas"></canvas>
 
-    <!-- 导航 -->
     <nav class="navbar">
         <a href="#home" class="nav-brand">
             <img src="portfolio-brand.png" alt="谋" class="nav-brand-img">
@@ -61,9 +52,11 @@
         </ul>
     </nav>
 
-    <!-- Hero -->
     <section id="home" class="hero">
+        <div class="hero-deco-cloud"></div>
+        <div class="hero-deco-line"></div>
         <div class="hero-content">
+            <div class="hero-label">PORTFOLIO 2026</div>
             <h1>游戏系统策划</h1>
             <div class="hero-en">GAME SYSTEM DESIGNER</div>
             <div class="hero-line"></div>
@@ -75,6 +68,20 @@
                 <span class="tag">交互设计</span>
                 <span class="tag">系统思维</span>
             </div>
+            <div class="hero-info-modules">
+                <div class="info-module">
+                    <div class="info-label">ROLE</div>
+                    <div class="info-value">GAME SYSTEM DESIGNER</div>
+                </div>
+                <div class="info-module">
+                    <div class="info-label">FOCUS</div>
+                    <div class="info-value">AI NATIVE · NARRATIVE</div>
+                </div>
+                <div class="info-module">
+                    <div class="info-label">SKILLS</div>
+                    <div class="info-value">SYSTEM · NARRATIVE · AI</div>
+                </div>
+            </div>
         </div>
         <div class="hero-character">
             <img src="hero-character.png" alt="古风人物">
@@ -82,7 +89,6 @@
         <div class="hero-vertical">AI · 叙事 · 游戏设计</div>
     </section>
 
-    <!-- 卷一 · 凤谋 -->
     <section id="ai-demo" class="section">
         <div class="section-deco-top"></div>
         <div class="container">
@@ -98,12 +104,14 @@
             </div>
             <div class="section-line"><span class="diamond"></span></div>
             <p class="section-desc">《凤谋》— 古风宫廷AI互动叙事体验</p>
-            
             <div class="project-showcase">
+                <div class="project-header">
+                    <span class="project-num">PROJECT 01</span>
+                    <span class="project-tag">AI INTERACTIVE NARRATIVE</span>
+                </div>
                 <div class="project-info">
                     <h3>项目概述</h3>
                     <p>基于大语言模型的分支叙事游戏Demo。玩家扮演新入宫的嫔妃，通过与AI驱动的NPC对话，在宫廷博弈中做出选择，最终走向不同结局。</p>
-                    
                     <div class="features">
                         <h4>核心设计</h4>
                         <ul>
@@ -113,7 +121,6 @@
                             <li><strong>多结局系统</strong>　根据累积选择计算结局走向，提供3种以上结局</li>
                         </ul>
                     </div>
-
                     <div class="tech-stack">
                         <h4>技术实现</h4>
                         <div class="tech-tags">
@@ -122,7 +129,6 @@
                             <span>Prompt Engineering</span>
                         </div>
                     </div>
-
                     <div class="btn-group">
                         <a href="demo.html" class="btn-primary">体验Demo</a>
                         <a href="prompt-design.html" class="btn-secondary">查看设计文档</a>
@@ -132,7 +138,6 @@
         </div>
     </section>
 
-    <!-- 卷二 · Prompt -->
     <section id="prompt-doc" class="section">
         <div class="section-deco-top"></div>
         <div class="container">
@@ -148,24 +153,31 @@
             </div>
             <div class="section-line"><span class="diamond"></span></div>
             <p class="section-desc">AI互动叙事的Prompt工程拆解</p>
-            
             <div class="doc-grid">
                 <div class="doc-card">
+                    <div class="doc-card-num">01</div>
+                    <div class="doc-card-tag">AI / PROMPT</div>
                     <h3>角色卡设计</h3>
                     <p>如何为AI角色构建一致的人设，包括性格维度、说话风格、知识边界和隐藏信息。</p>
                     <a href="prompt-design.html#character" class="btn-link">查看详情 →</a>
                 </div>
                 <div class="doc-card">
+                    <div class="doc-card-num">02</div>
+                    <div class="doc-card-tag">CONTEXT</div>
                     <h3>上下文注入策略</h3>
                     <p>对话历史管理、世界观注入、角色关系状态传递，确保AI输出连贯且符合设定。</p>
                     <a href="prompt-design.html#context" class="btn-link">查看详情 →</a>
                 </div>
                 <div class="doc-card">
+                    <div class="doc-card-num">03</div>
+                    <div class="doc-card-tag">OUTPUT</div>
                     <h3>输出格式约束</h3>
                     <p>结构化输出模板、选项生成规则、情绪标签系统，保证游戏逻辑可解析。</p>
                     <a href="prompt-design.html#output" class="btn-link">查看详情 →</a>
                 </div>
                 <div class="doc-card">
+                    <div class="doc-card-num">04</div>
+                    <div class="doc-card-tag">ITERATION</div>
                     <h3>调优迭代记录</h3>
                     <p>从初次测试到稳定输出的优化过程，包括常见问题和解决方案。</p>
                     <a href="prompt-design.html#iteration" class="btn-link">查看详情 →</a>
@@ -174,7 +186,6 @@
         </div>
     </section>
 
-    <!-- 卷三 · 分析 -->
     <section id="analysis" class="section">
         <div class="section-deco-top"></div>
         <div class="container">
@@ -190,29 +201,35 @@
             </div>
             <div class="section-line"><span class="diamond"></span></div>
             <p class="section-desc">《崩坏：星穹铁道》系统拆解与叙事设计研究</p>
-            
             <div class="analysis-content">
                 <div class="analysis-summary">
                     <div class="analysis-grid">
                         <div class="analysis-item">
+                            <div class="analysis-item-num">01</div>
+                            <div class="analysis-item-tag">SYSTEM</div>
                             <h4>系统架构</h4>
                             <p>拆解核心循环、子系统结构、系统间交叉关系</p>
                         </div>
                         <div class="analysis-item">
+                            <div class="analysis-item-num">02</div>
+                            <div class="analysis-item-tag">NARRATIVE</div>
                             <h4>叙事设计</h4>
                             <p>任务系统分层、多视角叙事、叙事与商业化平衡</p>
                         </div>
                         <div class="analysis-item">
+                            <div class="analysis-item-num">03</div>
+                            <div class="analysis-item-tag">COMBAT</div>
                             <h4>战斗系统</h4>
                             <p>回合制差异化、战绩点机制、肉鸽玩法设计</p>
                         </div>
                         <div class="analysis-item">
+                            <div class="analysis-item-num">04</div>
+                            <div class="analysis-item-tag">EXPLORE</div>
                             <h4>探索系统</h4>
                             <p>箱庭设计、内容填充策略、引导机制</p>
                         </div>
                     </div>
                 </div>
-
                 <div class="analysis-highlight">
                     <h3>核心洞察</h3>
                     <blockquote>
@@ -220,13 +237,11 @@
                     </blockquote>
                     <p>——摘自分析文章</p>
                 </div>
-
                 <a href="analysis.html" class="btn-primary">阅读完整分析</a>
             </div>
         </div>
     </section>
 
-    <!-- 档案 -->
     <section id="about" class="section">
         <div class="section-deco-top"></div>
         <div class="container">
@@ -241,7 +256,6 @@
                 </div>
             </div>
             <div class="section-line"><span class="diamond"></span></div>
-            
             <div class="about-content">
                 <div class="about-text">
                     <div class="dialogue-box">
@@ -250,7 +264,6 @@
                             <p>2027届本科毕业生，求职方向：游戏系统策划（AI原生/叙事）。</p>
                         </div>
                     </div>
-
                     <div class="dialogue-box">
                         <div class="speaker">能力</div>
                         <div class="text">
@@ -258,7 +271,6 @@
                             <p>具备编程能力（Java等），了解基本游戏引擎。能够独立产出交互原型，熟悉Figma原型设计。</p>
                         </div>
                     </div>
-                    
                     <div class="skills">
                         <h3>技能栈</h3>
                         <div class="skill-group">
@@ -288,7 +300,6 @@
                             </ul>
                         </div>
                     </div>
-
                     <div class="gaming-experience">
                         <h3>游戏经历</h3>
                         <p>覆盖二次元、卡牌、沙盒、竞技等多类型，习惯从系统设计、数值循环、用户体验角度拆解游戏：</p>
@@ -312,6 +323,7 @@
 
     <a href="#home" class="seal-stamp" aria-label="返回顶部">
         <img src="portfolio-return.png" alt="归" class="seal-stamp-img">
+        <span class="seal-tooltip">BACK TO TOP</span>
     </a>
 
     <script>
