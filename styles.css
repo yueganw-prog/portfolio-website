@@ -87,8 +87,8 @@ body {
 }
 
 .nav-brand-img {
-    width: 44px;
-    height: 44px;
+    width: 52px;
+    height: 52px;
     object-fit: contain;
     mix-blend-mode: screen;
     transition: opacity 0.3s;
@@ -1023,10 +1023,10 @@ footer {
 /* ===== 印章（归 · 返回顶部） ===== */
 .seal-stamp {
     position: fixed;
-    bottom: 28px;
-    right: 28px;
-    width: 56px;
-    height: 56px;
+    bottom: 24px;
+    right: 24px;
+    width: 64px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1041,8 +1041,8 @@ footer {
 }
 
 .seal-stamp-img {
-    width: 52px;
-    height: 52px;
+    width: 60px;
+    height: 60px;
     object-fit: contain;
     mix-blend-mode: screen;
 }
