@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPC AI行为系统设计 | RPG Game AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .doc-container { max-width: 900px; margin: 0 auto; padding: 80px 24px 60px; }
+        .doc-header { margin-bottom: 40px; }
+        .doc-header h1 { font-family: "Ma Shan Zheng", cursive; font-size: 2.2rem; color: var(--gold); margin-bottom: 6px; letter-spacing: 8px; }
+
+        .doc-section { background: rgba(17,17,17,0.8); border-radius: 0; padding: 36px; margin-bottom: 24px; border: 1px solid rgba(212,175,55,0.3); }
+        .doc-section h2 { font-family: "Ma Shan Zheng", cursive; font-size: 1.5rem; color: var(--gold); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(212,175,55,0.3); letter-spacing: 6px; }
+        .doc-section h3 { font-family: "Ma Shan Zheng", cursive; font-size: 1.2rem; color: var(--gold); margin: 20px 0 10px; letter-spacing: 4px; }
+        .doc-section p { color: var(--text-dim); margin-bottom: 12px; line-height: 2; }
+
+        .code-block { background: rgba(10,10,10,0.9); color: #e0e0e0; padding: 18px; border-radius: 0; font-family: 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.6; overflow-x: auto; margin: 14px 0; white-space: pre-wrap; border: 1px solid rgba(42,42,42,0.5); }
+        .code-block .comment { color: #6a9955; }
+        .code-block .keyword { color: #569cd6; }
+        .code-block .string { color: #ce9178; }
+        .code-block .variable { color: #4ec9b0; }
+
+        .doc-list { margin: 14px 0; padding-left: 22px; }
+        .doc-list li { color: var(--text-dim); margin-bottom: 6px; line-height: 1.8; }
+        .doc-list li strong { color: var(--gold); }
+
+        .highlight-box { background: rgba(212,175,55,0.03); border-left: 2px solid var(--gold); padding: 18px; margin: 18px 0; border-radius: 0; }
+        .highlight-box p { margin-bottom: 0; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        .comparison-table th { background: rgba(212,175,55,0.1); color: var(--gold); padding: 10px; text-align: left; border: 1px solid rgba(212,175,55,0.3); font-size: 0.9rem; letter-spacing: 2px; }
+        .comparison-table td { padding: 10px; border: 1px solid rgba(42,42,42,0.5); color: var(--text-dim); font-size: 0.9rem; }
+
+        .disclaimer { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 1px; margin-top: 10px; line-height: 1.8; }
+
+        .back-link { display: block; text-align: center; margin-top: 28px; color: var(--gold); text-decoration: none; font-size: 0.9rem; letter-spacing: 2px; transition: color 0.2s; }
+        .back-link:hover { color: var(--gold-light); }
+
+        @media (max-width: 768px) {
+            .doc-section { padding: 24px; }
+            .comparison-table th, .comparison-table td { padding: 8px 6px; font-size: 0.78rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="doc-container">
+        <div class="doc-header">
+            <h1>NPC AI 行为系统设计</h1>
+            <p style="color:var(--text-dim)">开放世界RPG · NPC AI整体架构 / 决策模型 / 队友与车辆AI / 落地流程 —— 个人设计研究 Case Study</p>
+            <p class="disclaimer">※ 本文为个人设计研究方案：基于公开品类观察、系统拆解与个人游戏经验推演而成，部分思路在个人独立开发的原型中验证，不代表任何实际项目或上线经验。</p>
+        </div>
+
+        <div class="doc-section">
+            <h2>一、设计背景与目标</h2>
+            <p>以《无限大》为代表的开放都市品类，把NPC AI的要求从"把对白写对"提升到了"把城市做活"：高NPC密度、载具驾驶、高自由度交互，意味着NPC不再是任务发布器，而是世界本身。这个Case Study回答三个问题：<strong>城市里的NPC凭什么"活着"？队友和车流如何成为玩法？一套NPC AI如何从需求走到可调优的落地？</strong></p>
+            <div class="doc-list">
+                <li><strong>体验目标</strong>　城市看起来"活着"：NPC有自己的生活节律，世界不因玩家的存在而运转，却会对玩家的行为做出回应。</li>
+                <li><strong>玩法目标</strong>　NPC行为可被玩家利用与影响：队友是可依赖的战力，车流是可借用的掩体与工具，而不是贴图。</li>
+                <li><strong>成本目标</strong>　行为可配置、可复用、可调试：策划通过参数与曲线批量塑造NPC个性，80%的常规行为不依赖程序写逻辑。</li>
+            </div>
+            <div class="highlight-box">
+                <p><strong>一句话定位：</strong>AI策划不是"让AI更聪明的人"，而是在<strong>玩家体验、生态真实、实现成本</strong>三者之间持续做权衡、并让权衡结果可被验证的人。</p>
+            </div>
+        </div>
+
+        <div class="doc-section" id="architecture">
+            <h2>二、总体架构与模块拆分</h2>
+            <p>整个NPC AI系统按数据流拆成五层，各层只通过<strong>黑板（Blackboard）</strong>交换数据，职责与维护边界清晰：</p>
+            <div class="code-block">
+<span class="comment">┌ 表现层 Presentation</span>  对话气泡 / 反应演出 / 目光跟随   <span class="comment">—— 让玩家"看懂"NPC</span>
+<span class="comment">├ 行为层 Behavior</span>      动作序列 / 寻路 / 物件交互       <span class="comment">—— 把决策变成可播的动作</span>
+<span class="comment">├ 决策层 Decision</span>      FSM / 行为树 / Utility AI       <span class="comment">—— 回答"现在该做什么"</span>
+<span class="comment">├ 情境层 Context</span>       时间 / 天气 / 地点 / 人群密度   <span class="comment">—— 回答"我处在什么环境"</span>
+<span class="comment">└ 感知层 Perception</span>    视觉 / 听觉 / 事件记忆          <span class="comment">—— 回答"我知道什么"</span>
+<span class="comment">  黑板 Blackboard</span>      跨层共享数据：我 / 周围 / 短期记忆，各层只读写自己声明的字段</div>
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>模块</th><th>核心职责</th><th>关键配置</th><th>维护分工</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>感知层</td><td>NPC"知道什么"：视觉半径与角度、听觉事件、对玩家行为的记忆</td><td>感知半径/记忆时长等参数表</td><td>策划调参 · 程序实现</td></tr>
+                    <tr><td>情境层</td><td>世界状态注入：时段、天气、地点标签、周围人群密度</td><td>地点标签表、时段定义</td><td>策划配置 · 程序供数据</td></tr>
+                    <tr><td>决策层</td><td>行为选择：树结构 + 打分 + 状态机兜底（见第三节）</td><td>行为树结构、Utility曲线、状态转移表</td><td>策划主配置 · 程序做节点与编辑器</td></tr>
+                    <tr><td>行为层</td><td>执行与同步：寻路、动作序列、与动画/物理系统对接</td><td>动作蒙太奇、寻路策略</td><td>程序实现 · 策划验收手感</td></tr>
+                    <tr><td>表现层</td><td>可读性：气泡台词、反应镜头、目光与身体朝向</td><td>表现规则表（事件→反应）</td><td>策划设计 · 动作动画配合</td></tr>
+                </tbody>
+            </table>
+            <div class="code-block">
+<span class="comment">// 黑板字段设计原则：谁生产、谁消费、何时失效，都在字段声明里约定</span>
+{
+  <span class="keyword">"self"</span>: { <span class="string">"hp"</span>, <span class="string">"personality"</span>, <span class="string">"affection"</span>, <span class="string">"current_schedule"</span> },
+  <span class="keyword">"perception"</span>: { <span class="string">"visible_actors"</span>, <span class="string">"heard_events"</span>, <span class="string">"threat_level"</span> },
+  <span class="keyword">"context"</span>: { <span class="string">"time"</span>, <span class="string">"weather"</span>, <span class="string">"location_tag"</span>, <span class="string">"crowd_density"</span> },
+  <span class="keyword">"memory"</span>: { <span class="string">"last_player_action"</span>, <span class="string">"grudge"</span>, <span class="string">"favor_log"</span> }  <span class="comment">// 带衰减时间戳</span>
+}</div>
+        </div>
+
+        <div class="doc-section" id="decision">
+            <h2>三、决策模型：FSM · 行为树 · Utility AI</h2>
+            <p>三种主流决策模型没有优劣，只有<strong>与行为复杂度是否匹配</strong>。先对比，再给选型原则：</p>
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>维度</th><th>FSM 状态机</th><th>行为树 Behavior Tree</th><th>Utility AI 效用AI</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>思维方式</td><td>状态 + 转移条件</td><td>行为的层级分解</td><td>多候选实时打分</td></tr>
+                    <tr><td>适合</td><td>状态少、要求确定的功能NPC</td><td>可组合复用的行为库</td><td>情境复杂的关键角色</td></tr>
+                    <tr><td>优势</td><td>直观、易调试、结果确定</td><td>结构清晰、节点可复用、可图形化</td><td>有权衡感、能涌现"聪明"行为</td></tr>
+                    <tr><td>短板</td><td>状态爆炸、难扩展</td><td>同一时刻只走一条路，缺权衡感</td><td>难调试、参数敏感、易失控</td></tr>
+                    <tr><td>调试方式</td><td>断点查看当前状态</td><td>可视化树 + 运行时高亮</td><td>曲线可视化 + 决策日志采样</td></tr>
+                    <tr><td>策划友好度</td><td>高</td><td>高（图形化编辑器）</td><td>中（需理解权重与曲线）</td></tr>
+                </tbody>
+            </table>
+            <h3>3.1 选型原则</h3>
+            <div class="doc-list">
+                <li><strong>先数行为数量</strong>：行为 ≤ 5 种的功能NPC（商贩、保安）→ FSM，要的就是绝对确定。</li>
+                <li><strong>再看可复用性</strong>：路人、市民等大量环境NPC → 行为树，节点库复用率决定产能。</li>
+                <li><strong>最后看"权衡感"</strong>：队友、反派头目等关键角色 → Utility，让玩家觉得"它会思考"。</li>
+                <li><strong>不是三选一</strong>：复杂角色用混合架构，三种模型各司其职。</li>
+            </div>
+            <h3>3.2 混合架构：骨架 · 智能 · 兜底</h3>
+            <div class="code-block">
+<span class="comment">// 队友AI混合示意：三层各管一件事</span>
+<span class="keyword">FSM 原子层</span>　　受击 / 倒地 / 死亡　　　<span class="comment">← 任何时刻可打断，保证不出戏</span>
+<span class="keyword">行为树 结构层</span>　战斗 / 跟随 / 待机 / 撤离　<span class="comment">← 大分支由指令与情境触发</span>
+<span class="keyword">Utility 打分层</span> 战斗分支内：输出/治疗/掩护/撤退 <span class="comment">← 周期打分，选当前最优</span></div>
+            <div class="code-block">
+<span class="comment">// Utility打分示例：策划调的是权重与曲线，不是逻辑代码</span>
+<span class="variable">score(治疗)</span> = <span class="keyword">0.5</span>×伤势比例 + <span class="keyword">0.2</span>×(1−距离/上限) + <span class="keyword">0.3</span>×威胁度
+<span class="variable">score(输出)</span> = <span class="keyword">0.6</span>×目标威胁 + <span class="keyword">0.2</span>×技能就绪 + <span class="keyword">0.2</span>×(1−玩家仇恨占比)
+<span class="variable">score(掩护)</span> = <span class="keyword">0.4</span>×玩家血量告急 + <span class="keyword">0.3</span>×敌火密度 + <span class="keyword">0.3</span>×掩体可用
+
+<span class="comment">// 每0.5s重算一次候选；得分需高于"犹豫阈值"且经过0.8s切换冷却
+// 才允许换行为——防止高频抖动，这是调优中最容易漏的一条</span></div>
+            <div class="highlight-box">
+                <p><strong>策划的产出形态：</strong>行为树结构图、参数表、Utility曲线表——交付的是<strong>可执行的配置件</strong>，而不是"感觉他会很高兴"这类形容词。曲线支持热更新，一次只动一个变量。</p>
+            </div>
+        </div>
+
+        <div class="doc-section" id="openworld">
+            <h2>四、场景设计（一）：开放世界 NPC 行为生态</h2>
+            <h3>4.1 日程系统（Schedule）</h3>
+            <p>用时间表驱动NPC的"生活"，并始终保留<strong>可打断的最高优先级</strong>：</p>
+            <div class="code-block">
+<span class="string">"schedule"</span>: [
+  { <span class="keyword">"time"</span>: <span class="string">"06:00-08:00"</span>, <span class="string">"place"</span>: <span class="string">"home"</span>,   <span class="string">"pool"</span>: [<span class="string">"整理摊位"</span>, <span class="string">"吃早餐"</span>, <span class="string">"与邻居闲聊"</span>] },
+  { <span class="keyword">"time"</span>: <span class="string">"08:00-18:00"</span>, <span class="string">"place"</span>: <span class="string">"market"</span>, <span class="string">"pool"</span>: [<span class="string">"营业"</span>, <span class="string">"补货"</span>, <span class="string">"招呼熟客"</span>] },
+  { <span class="keyword">"time"</span>: <span class="string">"18:00-22:00"</span>, <span class="string">"place"</span>: <span class="string">"tavern"</span>, <span class="string">"pool"</span>: [<span class="string">"喝酒"</span>, <span class="string">"打听消息"</span>, <span class="string">"看表演"</span>] },
+  { <span class="keyword">"interrupt"</span>: { <span class="string">"combat"</span>: <span class="keyword">999</span>, <span class="string">"quest"</span>: <span class="keyword">900</span> } }  <span class="comment">// 战斗与任务可打断一切</span>
+]</div>
+            <h3>4.2 地点行为池</h3>
+            <p>每个地点定义一组"合理行为"，NPC按个性权重抽取——同一个广场，商人去看货摊，学生去喂鸽子：</p>
+            <table class="comparison-table">
+                <thead><tr><th>地点标签</th><th>行为池示例</th></tr></thead>
+                <tbody>
+                    <tr><td>商业街</td><td>逛橱窗、买小吃、结伴同行、驻足拍照</td></tr>
+                    <tr><td>广场</td><td>喷泉边休息、看街头表演、喂鸽子、集会围观</td></tr>
+                    <tr><td>街角</td><td>打电话、等同伴、抽烟放风、发呆看天</td></tr>
+                    <tr><td>地铁站</td><td>排队、赶路小跑、看线路图、给人让座</td></tr>
+                </tbody>
+            </table>
+            <h3>4.3 打破"机器人感"的三个手段</h3>
+            <div class="doc-list">
+                <li><strong>记忆系统</strong>　NPC记住玩家上次的行为（帮过忙 / 撞过人 / 持过械），下次相遇的台词与反应不同——"世界会回应你"。</li>
+                <li><strong>群体行为</strong>　围观、避险、让路的从众逻辑：一人奔跑，全街回头。</li>
+                <li><strong>冗余行为</strong>　排队、闲聊、打电话等"无功能"行为，恰恰是最有生活感的行为。</li>
+            </div>
+            <div class="highlight-box">
+                <p><strong>产品意识：生态为体验让路。</strong>三条覆盖规则——任务NPC永远在场（任务权重 &gt; 日程）；交互物件附近NPC优先让位；镜头内NPC行为精度高于镜头外。生态真实是手段，玩家体验才是目的。</p>
+            </div>
+        </div>
+
+        <div class="doc-section" id="companion">
+            <h2>五、场景设计（二）：NPC 队友 AI</h2>
+            <p>队友AI = <strong>战斗协作 + 指令响应 + 情感表达</strong>三层，逐层给体验兜底：</p>
+            <table class="comparison-table">
+                <thead><tr><th>层次</th><th>设计要点</th><th>对应的体验目标</th></tr></thead>
+                <tbody>
+                    <tr><td>战斗协作</td><td>跟随阵型、目标选择与玩家意图对齐（打玩家打的目标）、技能释放的时机克制</td><td>可靠感：队友是我的战力延伸，不是失控变量</td></tr>
+                    <tr><td>指令响应</td><td>简单指令集（跟随/集合/突进/撤退）映射到行为树大分支切换</td><td>掌控感：0.3s内可感知的响应</td></tr>
+                    <tr><td>情感表达</td><td>好感度影响Utility权重与台词库；玩家倒地时"救援"评分陡增</td><td>陪伴感：关系是真实起作用的，不是摆设</td></tr>
+                </tbody>
+            </table>
+            <h3>5.1 设计红线</h3>
+            <div class="doc-list">
+                <li><strong>不抢最后一下</strong>　队友伤害足量，但击杀"收头"留给玩家。</li>
+                <li><strong>不卡位</strong>　跟随用动态避让；脱战且在镜头外时允许瞬移兜底。</li>
+                <li><strong>不喧宾夺主</strong>　队友大招评分在玩家连招期间被压制，避免"全场都在放大招"。</li>
+                <li><strong>不无脑送死</strong>　血量阈值触发撤退评分陡增，死亡要有代价感。</li>
+            </div>
+            <div class="highlight-box">
+                <p><strong>原型验证：</strong>以上思路中的核心部分——状态机骨架、好感度对行为权重的影响、动态对话树——已在我独立开发的 Minecraft Forge Mod《AI伙伴系统》中完成原型级验证（见"人物档案·游戏经历"）。开放世界生态与车辆AI部分为方案推演与公开资料研究。</p>
+            </div>
+        </div>
+
+        <div class="doc-section" id="vehicle">
+            <h2>六、场景设计（三）：车辆 AI</h2>
+            <p>车辆AI先分层：<strong>交通层营造都市可信度，玩法层提供驾驶与对抗乐趣</strong>，两者预算完全不同：</p>
+            <table class="comparison-table">
+                <thead><tr><th>层级</th><th>对象</th><th>决策模型</th><th>性能预算</th></tr></thead>
+                <tbody>
+                    <tr><td>交通层</td><td>背景车流（不可交互）</td><td>FSM：巡航 / 跟车 / 避让 / 停车</td><td>池化 spawn/despawn，行为简化</td></tr>
+                    <tr><td>玩法层</td><td>可抢夺 / 敌对 / 剧情车辆</td><td>行为树 + Utility：追击、包抄、截停</td><td>精细行为，同屏限量</td></tr>
+                    <tr><td>静态层</td><td>远景车流</td><td>路径动画回放</td><td>几乎无决策开销</td></tr>
+                </tbody>
+            </table>
+            <div class="doc-list">
+                <li><strong>车道图 ≠ 行人导航网格</strong>　车辆沿车道图寻路，行人走导航网格，两套系统通过红绿灯与斑马线"互相看见"——路口的默契是城市可信度的最大来源。</li>
+                <li><strong>交通流是密度问题</strong>　按玩家视线锥分配刷新预算，玩家看不到的地方不养车。</li>
+                <li><strong>追逐的戏剧性</strong>　敌对车Utility中加入"包抄位"评分，追求配合感而非单体强度。</li>
+                <li><strong>LOD式精度递减</strong>　距玩家越远行为越简化：Full → Simplified → 路径回放。</li>
+            </div>
+        </div>
+
+        <div class="doc-section" id="workflow">
+            <h2>七、落地流程：AI需求 → 设计 → 协作 → 调优</h2>
+            <h3>7.1 AI需求拆解：把体验语言翻译成行为语言</h3>
+            <div class="highlight-box">
+                <p><strong>示例：</strong>需求原文"这座城市要有生活气息" → 行为需求文档："玩家静止观察任一街道30秒，应看到≥3类不同的NPC自发行为；NPC对玩家奔跑的避让延迟 ≤ 1秒"。——把形容词变成<strong>可验收的条款</strong>，是AI策划的第一职责。</p>
+            </div>
+            <h3>7.2 策划设计产出</h3>
+            <div class="doc-list">
+                <li>行为树结构图（节点复用标注、优先级标注）</li>
+                <li>参数表：感知半径、冷却时间、切换阈值、优先级</li>
+                <li>Utility曲线表：权重、衰减函数、犹豫阈值</li>
+                <li>验收标准与回归用例（哪些现象算Bug，哪些算个性）</li>
+            </div>
+            <h3>7.3 与程序 / AI协作</h3>
+            <p>与程序约定<strong>节点接口与黑板字段协议</strong>，之后划分Ownership：程序做"新节点类型"与编辑器能力，策划用可视化编辑器自助完成80%的常规行为配置——新增一个NPC人设 ≈ 复用节点库 + 新写一份参数表，而不是提一次需求。</p>
+            <h3>7.4 测试与调优</h3>
+            <div class="doc-list">
+                <li><strong>观察模式</strong>　上帝视角 + 时间压缩，盯"10个NPC的10分钟"而不是"1个NPC的10秒"。</li>
+                <li><strong>行为日志埋点</strong>　每次决策记录候选行为的得分快照，事后可回放"它当时为什么选这个"。</li>
+                <li><strong>回归用例库</strong>　典型场景脚本化，每次改参数自动跑一遍，防止"修好A坏了B"。</li>
+                <li><strong>玩家盲测</strong>　只问一个问题："你觉得这里的人和别的游戏有区别吗？"</li>
+            </div>
+            <table class="comparison-table">
+                <thead><tr><th>典型问题</th><th>定位</th><th>调优手段</th></tr></thead>
+                <tbody>
+                    <tr><td>路人围观扎堆</td><td>地点行为池无密度控制</td><td>加人群密度衰减曲线，同类行为按距离互斥</td></tr>
+                    <tr><td>队友CD好就放大招，抢玩家节奏</td><td>输出评分恒定偏高</td><td>加"时机分"：敌人破绽/玩家连招中才释放，并加切换冷却</td></tr>
+                    <tr><td>车辆穿墙、路口鬼影刹车</td><td>车辆复用了行人导航网格</td><td>车道图与行人网格分离，路口让行逻辑独立</td></tr>
+                    <tr><td>NPC对玩家行为毫无反应，"死城"感</td><td>记忆系统没接表现层</td><td>记忆事件强制绑定一条可见反应（台词/动作/目光）</td></tr>
+                </tbody>
+            </table>
+            <p style="color:var(--text-muted); font-size:0.78rem">※ 以上案例源自 Minecraft Forge Mod《AI伙伴系统》原型调试与方案推演，用于说明方法论，非单一项目经历。</p>
+        </div>
+
+        <div class="doc-section">
+            <h2>八、设计理念与能力迁移</h2>
+            <div class="doc-list">
+                <li><strong>价值排序</strong>　玩家体验 &gt; 生态真实 &gt; 技术复杂度——不能被玩家感知的AI复杂度，都是纯成本。</li>
+                <li><strong>可读性优先</strong>　NPC行为必须"被看懂"，表现层与决策层同等重要。</li>
+                <li><strong>工具意识</strong>　好的AI策划推动工具建设（可视化编辑器、参数热更、决策回放），让自己和团队同时提效。</li>
+            </div>
+            <div class="highlight-box">
+                <p><strong>能力迁移：Prompt工程与Game AI是同构的。</strong>角色卡 ≈ 行为档案；上下文注入 ≈ 黑板数据；输出格式约束 ≈ 行为协议；迭代调优 ≈ 参数与曲线调优。我在AI叙事项目中沉淀的"用结构化约束换取可控智能"的方法论，可以直接迁移到NPC AI的行为设计上。</p>
+            </div>
+            <p>这套方案仍在持续迭代中，欢迎交流指正。</p>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← 返回作品集</a>
+</body>
+</html>

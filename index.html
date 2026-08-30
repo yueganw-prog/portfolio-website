@@ -48,6 +48,7 @@
             <li><a href="#ai-demo"><span class="nav-cn">凤谋</span><span class="nav-en">Feng Mou</span></a></li>
             <li><a href="#prompt-doc"><span class="nav-cn">Prompt</span><span class="nav-en">Design</span></a></li>
             <li><a href="#analysis"><span class="nav-cn">分析</span><span class="nav-en">Analysis</span></a></li>
+            <li><a href="#npc-ai"><span class="nav-cn">NPC AI</span><span class="nav-en">Game AI</span></a></li>
             <li><a href="#about"><span class="nav-cn">档案</span><span class="nav-en">Profile</span></a></li>
         </ul>
     </nav>
@@ -238,6 +239,96 @@
                     <p>——摘自分析文章</p>
                 </div>
                 <a href="analysis.html" class="btn-primary">阅读完整分析</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="npc-ai" class="section">
+        <div class="section-deco-top"></div>
+        <div class="container">
+            <div class="section-header">
+                <div class="section-num-wrap">
+                    <div class="cloud-left"></div>
+                    <div class="section-num">肆</div>
+                </div>
+                <div class="section-title-group">
+                    <div class="section-title">NPC AI 行为系统</div>
+                    <div class="section-subtitle">SCROLL 04 — RPG NPC AI BEHAVIOR SYSTEM</div>
+                </div>
+            </div>
+            <div class="section-line"><span class="diamond"></span></div>
+            <p class="section-desc">开放世界RPG的NPC AI行为系统设计研究 — 架构拆解 · 决策模型 · 生态/队友/车辆 · 落地流程</p>
+            <div class="project-showcase">
+                <div class="project-header">
+                    <span class="project-num">CASE STUDY 02</span>
+                    <span class="project-tag">GAME AI · PERSONAL DESIGN STUDY</span>
+                </div>
+                <div class="project-info">
+                    <h3>项目概述</h3>
+                    <p>个人设计研究：以《无限大》所代表的开放都市品类为研究对象，系统推演RPG中NPC AI的行为架构与落地方法——让NPC拥有自己的生活，让队友与车流成为玩家可感知、可利用的玩法，并回答"AI需求如何变成可上线的AI行为"。</p>
+                    <div class="features">
+                        <h4>核心设计</h4>
+                        <ul>
+                            <li><strong>分层架构</strong>　感知 / 情境 / 决策 / 行为 / 表现五层拆分，黑板共享数据，明确策划与程序的模块边界</li>
+                            <li><strong>决策模型</strong>　FSM · 行为树 · Utility AI 按角色类型混用：行为树做骨架、Utility做打分、FSM做原子兜底</li>
+                            <li><strong>开放世界生态</strong>　日程系统 + 地点行为池 + 记忆系统，NPC不依赖玩家"自转"，任务优先级可随时覆盖</li>
+                            <li><strong>队友AI</strong>　战斗协作 / 指令响应 / 情感权重三层设计——队友要可靠，但不能比玩家聪明</li>
+                            <li><strong>车辆AI</strong>　交通流与玩法车分层，车道图独立寻路，LOD式精度递减平衡性能与都市可信度</li>
+                            <li><strong>落地流程</strong>　AI需求 → 策划设计 → 程序/AI协作 → 测试调优的完整工作方法，策划交付可执行的配置件</li>
+                        </ul>
+                    </div>
+                    <div class="tech-stack">
+                        <h4>方法与验证</h4>
+                        <div class="tech-tags">
+                            <span>Behavior Tree</span>
+                            <span>FSM</span>
+                            <span>Utility AI</span>
+                            <span>黑板 / 感知系统</span>
+                            <span>Forge Mod 原型验证</span>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="npc-ai.html" class="btn-primary">阅读完整设计</a>
+                        <a href="npc-ai.html#workflow" class="btn-secondary">查看落地流程</a>
+                    </div>
+                </div>
+            </div>
+            <div class="analysis-highlight">
+                <h3>设计立场</h3>
+                <blockquote>
+                    NPC AI 的目标不是让AI更聪明，而是让玩家感到世界在回应自己——行为的每一分复杂度，都必须兑换成玩家可感知的体验。
+                </blockquote>
+                <p>——NPC AI 行为系统设计 · 设计理念</p>
+            </div>
+            <div class="doc-grid">
+                <div class="doc-card">
+                    <div class="doc-card-num">01</div>
+                    <div class="doc-card-tag">ARCHITECTURE</div>
+                    <h3>总体架构与模块拆分</h3>
+                    <p>五层架构如何划分职责：哪些归策划配置，哪些归程序实现，数据如何在黑板中流转。</p>
+                    <a href="npc-ai.html#architecture" class="btn-link">查看详情 →</a>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-num">02</div>
+                    <div class="doc-card-tag">DECISION MODELS</div>
+                    <h3>FSM · 行为树 · Utility</h3>
+                    <p>三种决策模型对比与混合架构——按行为复杂度匹配模型，而不是追逐单一方案。</p>
+                    <a href="npc-ai.html#decision" class="btn-link">查看详情 →</a>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-num">03</div>
+                    <div class="doc-card-tag">SCENARIOS</div>
+                    <h3>生态 · 队友 · 车辆</h3>
+                    <p>开放世界NPC行为生态、队友AI三层设计、车辆交通与玩法分层的三类场景要点。</p>
+                    <a href="npc-ai.html#openworld" class="btn-link">查看详情 →</a>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-card-num">04</div>
+                    <div class="doc-card-tag">WORKFLOW</div>
+                    <h3>落地流程与调优</h3>
+                    <p>从AI需求拆解、设计文档、程序协作，到观察模式测试与参数调优的完整闭环。</p>
+                    <a href="npc-ai.html#workflow" class="btn-link">查看详情 →</a>
+                </div>
             </div>
         </div>
     </section>
