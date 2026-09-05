@@ -6,6 +6,20 @@
     <title>凤谋 | AI互动叙事Demo v2</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="gsap.min.js"></script>
+    <script src="ScrollTrigger.min.js"></script>
+    <script>
+    (function () {
+        var d = document.documentElement;
+        if (window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            d.classList.add('js-anim');
+            window.setTimeout(function () {
+                if (!d.hasAttribute('data-anim-started')) { d.classList.add('anim-failsafe'); }
+            }, 3000);
+        }
+    })();
+    </script>
+    <script src="site-anim.js" defer></script>
     <style>
         .demo-container { max-width: 900px; margin: 0 auto; padding: 80px 24px 60px; min-height: 100vh; }
         .demo-header { text-align: center; margin-bottom: 32px; }
@@ -77,12 +91,12 @@
 <body>
     <div class="demo-container">
         <div class="demo-header">
-            <h1>凤谋</h1>
-            <p>AI驱动的古风宫廷互动叙事 · 系统策划作品集</p>
+            <h1 data-anim>凤谋</h1>
+            <p data-anim>AI驱动的古风宫廷互动叙事 · 系统策划作品集</p>
         </div>
-        
+
         <div class="game-layout">
-            <div class="game-area" id="gameArea">
+            <div class="game-area" id="gameArea" data-anim>
                 <div class="story-header">
                     <h3 id="sceneTitle">序章：入宫</h3>
                     <span class="story-status" id="storyStatus">第1章 / 共6章</span>
@@ -91,7 +105,7 @@
                 <div class="choices" id="choicesArea"></div>
             </div>
             
-            <div class="state-panel">
+            <div class="state-panel" data-anim>
                 <h3>属性面板</h3>
                 <div class="state-item">
                     <div class="state-label"><span>声望</span><span id="reputationVal">50</span></div>

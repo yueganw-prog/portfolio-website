@@ -6,6 +6,20 @@
     <title>游戏叙事分析 | 崩坏：星穹铁道</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="gsap.min.js"></script>
+    <script src="ScrollTrigger.min.js"></script>
+    <script>
+    (function () {
+        var d = document.documentElement;
+        if (window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            d.classList.add('js-anim');
+            window.setTimeout(function () {
+                if (!d.hasAttribute('data-anim-started')) { d.classList.add('anim-failsafe'); }
+            }, 3000);
+        }
+    })();
+    </script>
+    <script src="site-anim.js" defer></script>
     <style>
         .analysis-container {
             max-width: 900px;
@@ -154,8 +168,8 @@
 <body>
     <div class="analysis-container">
         <div class="analysis-header">
-            <h1>《崩坏：星穹铁道》系统拆解与叙事设计研究</h1>
-            <div class="analysis-meta">
+            <h1 data-anim>《崩坏：星穹铁道》系统拆解与叙事设计研究</h1>
+            <div class="analysis-meta" data-anim>
                 <span>分析方向：系统架构 / 叙事设计 / 战斗系统</span>
                 <span>游戏时长：70级</span>
             </div>
